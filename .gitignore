@@ -52,3 +52,9 @@
 
 # IDE Project files
 /.idea
+
+# vqmod
+/upload/vqmod/logs/*
+/upload/vqmod/vqcache/*
+/upload/vqmod/checked.cache
+/upload/vqmod/mods.cache
