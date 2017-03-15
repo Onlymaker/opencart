@@ -1,0 +1,622 @@
+<modification>
+	<id>VQMOD REFERRAL MODULE</id>
+	<version>2.x</version>
+	<vqmver>2.X</vqmver>
+	<author>DEAWid [www.deawid.com]</author>
+
+  <file name="admin/model/extension/extension.php">
+    <operation>
+      <search position="after"><![CDATA[public function install($type, $code) {]]></search>
+      <add><![CDATA[
+        //referrer - start
+          if($type != 'payment' && $code == 'referrer'){
+            $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "referrer_log` (`id` int(11) NOT NULL AUTO_INCREMENT,`customer_id` int(11) NOT NULL,`sponzor_id` int(11) NOT NULL,`order_id` int(11) NOT NULL,`price` decimal(10,2) NOT NULL,`currency_id` int(11) NOT NULL,`currency_value` decimal(15,8) NOT NULL,`date` datetime NOT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;");
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "extension` (`type`,`code`) VALUES('payment','referrer')");
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "customer` ADD `referrer_id` INT( 11 ) NOT NULL AFTER `customer_id` , ADD `referrer_price` DECIMAL( 10, 2 ) NOT NULL AFTER `referrer_id`");
+            $this->db->query("ALTER TABLE `" . DB_PREFIX . "order` ADD `give_referrer_profit` TINYINT( 1 ) NOT NULL DEFAULT '1' AFTER `order_id` ");
+          }
+        //referrer - stop
+      ]]></add>
+    </operation>
+  </file>
+
+  <file name="admin/controller/customer/customer.php">
+    <operation>
+      <search position="before"><![CDATA[if (isset($this->request->post['firstname'])) {]]></search>
+      <add><![CDATA[
+        //referrer - start
+          $this->load->model('sale/referrer');
+          $ref_module_installed               = $this->model_sale_referrer->isInstalled();
+          $data['ref_module_installed'] = $ref_module_installed;
+          if($ref_module_installed){
+            $this->language->load('extension/module/referrer');
+            $data['entry_balance']          = $this->language->get('text_balance');
+            $data['entry_referrer_id']      = $this->language->get('text_referrer_id');
+            $data['entry_referrer_id_info'] = $this->language->get('entry_referrer_id_info');
+            
+            if (isset($this->request->post['referrer_price'])){$data['referrer_price'] = $this->request->post['referrer_price'];}
+            elseif(!empty($customer_info)){$data['referrer_price'] = $customer_info['referrer_price'];}
+            else{$data['referrer_price'] = '0';}
+            
+            if (isset($this->request->post['referrer_id'])){$data['referrer_id'] = $this->request->post['referrer_id'];}
+            elseif(!empty($customer_info)){$data['referrer_id'] = $customer_info['referrer_id'];}
+            else{$data['referrer_id'] = '0';}
+            
+            $this->language->load('customer/customer');
+          }
+        //referrer - stop
+      ]]></add>
+    </operation>
+  </file>
+  
+  <file name="admin/controller/sale/order.php">
+    <operation>
+      <search position="before"><![CDATA[$extensions = $this->model_extension_extension->getInstalled('fraud');]]></search>
+      <add><![CDATA[ 
+        //referrer - start
+          $this->load->model('sale/referrer');
+          $ref_module_installed                    = $this->model_sale_referrer->isInstalled();
+          $data['referrer_module_installed'] = $ref_module_installed;
+          
+          if($ref_module_installed){
+            $this->language->load('extension/module/referrer');
+              $data['text_ref_give_profit']          = $this->language->get('text_ref_give_profit');
+              $data['text_referrer_min_price_error'] = $this->language->get('text_referrer_min_price_error');
+              $data['text_no_profit']                = $this->language->get('text_no_profit');
+              $data['text_profit_info']              = $this->language->get('text_profit_info');
+              $data['text_customer_name']            = $this->language->get('text_customer_name');
+              $data['text_ref_level']                = $this->language->get('text_ref_level');
+              $data['text_profit']                   = $this->language->get('text_profit');
+              if(isset($this->request->get['order_id'])){
+                $order_id = $this->request->get['order_id'];
+                $this->load->model('sale/referrer');
+                $data['profit_referrers'] = $this->model_sale_referrer->getReferrerProfits($order_id);
+                $data['give_referrer_profit'] = $this->model_sale_referrer->giveReferrerProfit($order_id);
+                $data['check_refererr_min_price'] = $this->model_sale_referrer->checkOrderMinPrice($order_id);
+              }
+              $this->language->load('sale/order');
+            }
+        //referrer - stop
+      ]]></add>
+    </operation>
+  </file>
+
+  <file name="admin/model/customer/customer.php">
+    <operation>
+      <search position="after"><![CDATA[$customer_id = $this->db->getLastId();]]></search>
+      <add><![CDATA[
+        //referrer - start
+          $this->load->model('sale/referrer');
+          $ref_module_installed = $this->model_sale_referrer->isInstalled();
+          if($ref_module_installed){
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET referrer_price = '" . $this->db->escape($data['referrer_price']) . "', referrer_id = '" . $this->db->escape($data['referrer_id']) . "' WHERE customer_id = '".(int)$customer_id."'");
+          }
+       //referrer - stop
+      ]]></add>
+    </operation>
+    <operation>
+      <search position="before"><![CDATA[if ($data['password']) {]]></search>
+      <add><![CDATA[
+        //referrer - start
+          $this->load->model('sale/referrer');
+          $ref_module_installed = $this->model_sale_referrer->isInstalled();
+          if($ref_module_installed){
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET referrer_price = '" . $this->db->escape($data['referrer_price']) . "', referrer_id = '" . $this->db->escape($data['referrer_id']) . "' WHERE customer_id = '".(int)$customer_id."'");
+          }
+        //referrer - stop
+      ]]></add>
+    </operation>
+  </file>
+
+  <file name="admin/view/template/customer/customer_form.tpl">
+    <operation>
+      <search position="before"><![CDATA[<label class="col-sm-2 control-label" for="input-newsletter"><?php echo $entry_newsletter; ?></label>]]></search>
+      <add><![CDATA[
+        <?php if($ref_module_installed){?>
+        <label class="col-sm-2 control-label" for="referrer_id"><?php echo $entry_referrer_id; ?></label>
+        <div class="col-sm-10">
+          <input type="text" name="referrer_id" id="referrer_id" value="<?php echo $referrer_id; ?>" class="form-control" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="referrer_price"><?php echo $entry_balance; ?></label>
+        <div class="col-sm-10">
+          <input type="text" name="referrer_price" id="referrer_price" value="<?php echo $referrer_price; ?>" class="form-control" />
+        </div>
+      </div>
+      <div class="form-group">
+     <?php } ?>
+    ]]></add>
+    </operation>
+  </file>
+
+  <file name="admin/view/template/sale/order_info.tpl">
+    <operation>
+      <search position="before"><![CDATA[<label class="col-sm-2 control-label" for="input-notify"><?php echo $entry_notify; ?></label>]]></search>
+      <add><![CDATA[
+        <?php if($referrer_module_installed){?>
+          <label class="col-sm-2 control-label" for="input-ref_give_profit"><?php echo $text_ref_give_profit; ?></label>
+          <div class="col-sm-10">
+            <input type="checkbox" name="referrer_give_profit" id="input-ref_give_profit" value="1"<?php if(!$profit_referrers){echo ' disabled=disabled';}else{if($give_referrer_profit){echo ' checked="checked"';}}?> /><?php if(!$profit_referrers){?><i>[<?php echo $text_no_profit;?>]</i><?php }?>
+          </div>
+        </div>
+        <?php if($check_refererr_min_price){echo $text_referrer_min_price_error;}?>
+         <?php if($profit_referrers){?>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-profit-info"><?php echo $text_profit_info;?></label>
+            <div class="col-sm-10">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="width: 200px; line-height: 25px;"><b><?php echo $text_customer_name;?></b></td>
+                  <td style="width: 60px; line-height: 25px;" align="center"><b><?php echo $text_ref_level;?></b></td>
+                  <td style="width: 300px; line-height: 25px;"><b><?php echo $text_profit;?></b></td>
+                </tr>
+                <?php $i=0;foreach($profit_referrers as $referrer){$i++;?>
+                <tr>
+                  <td style="width: 200px; line-height: 25px;"><?php echo $referrer['name'];?></td>
+                  <td style="width: 60px; line-height: 25px;" align="center"><?php echo $i;?></td>
+                  <td style="width: 100px; line-height: 25px;"><?php echo $referrer['profit'];?></td>
+                </tr>
+                <?php }?>
+              </table>
+            </div>
+            </div>
+            <?php } ?>
+            <div class="form-group">
+            <?php } ?>
+    ]]></add>
+    </operation>
+    <operation>
+      <search position="replace"><![CDATA[data: 'order_status_id=]]></search>
+      <add><![CDATA[data: 'referrer_give_profit=' + encodeURIComponent($('input[name=\'referrer_give_profit\']').prop('checked') ? 1 : 0) + '&order_status_id=]]></add>
+    </operation>
+  </file>
+
+  <file name="catalog/controller/account/account.php">
+    <operation>
+      <search position="after"><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+      <add><![CDATA[
+        //referrer - start
+            $this->load->model('account/referrer');
+        $ref_module_installed               = $this->model_account_referrer->isInstalled();
+        $data['ref_module_installed'] = $ref_module_installed;
+        
+        if($ref_module_installed){
+          $this->load->model('setting/setting');
+          $data['referrer_settings'] = $this->model_setting_setting->getSetting('referrer');
+          if(isset($data['referrer_settings']['referrer_status'])){
+                $this->language->load('account/referrer');
+            $data['text_view_refferers'] = $this->language->get('text_view_refferers');
+          }else{
+            $data['text_view_refferers'] = '';
+          }
+          
+          $data['referrers'] = $this->url->link('account/referrers', '', 'SSL');
+          $this->language->load('account/account');
+          }
+        //referrer - end 
+      ]]></add>
+    </operation>
+  </file>
+
+  <file name="catalog/controller/account/register.php">
+      <operation>
+        <search position="before"><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+        <add><![CDATA[
+          //update
+          if (isset($this->request->get['ref'])){$this->session->data['ref_id'] = $this->request->get['ref'];}
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="before"><![CDATA[$this->document->setTitle($this->language->get('heading_title'));]]></search>
+        <add><![CDATA[
+          //update
+          if (isset($this->request->get['ref'])){$this->session->data['ref_id'] = $this->request->get['ref'];}
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="before"><![CDATA[$this->load->language('account/register');]]></search>
+        <add><![CDATA[
+          //referrer - start
+            $this->load->model('account/referrer');
+            $ref_module_installed               = $this->model_account_referrer->isInstalled();
+            $data['ref_module_installed'] = $ref_module_installed;
+        
+            if($ref_module_installed){
+              $this->load->model('setting/setting');
+              $data['referrer_settings'] = $this->model_setting_setting->getSetting('referrer');
+              if(isset($data['referrer_settings']['referrer_status'])){
+                  $this->language->load('account/referrer');
+                  if(isset($data['referrer_settings']['referrer_ref_compulsory_reg'])){
+                    $data['referrer_compulsory_reg']  = $data['referrer_settings']['referrer_ref_compulsory_reg'];
+                  }else{
+                    $data['referrer_compulsory_reg']  = false;
+                  }
+                  $data['text_compulsory_ref_info'] = $this->language->get('text_compulsory_ref_info');
+              }else{
+                $data['referrer_compulsory_reg']  = false;
+                  $data['text_compulsory_ref_info'] = "";
+              }
+              $data['text_ref_id'] = $this->language->get('text_ref_id');
+              if (isset($this->request->get['ref'])){$data['get_ref_id'] = $this->request->get['ref'];}
+              elseif(isset($this->session->data['ref_id'])){$data['get_ref_id'] = $this->session->data['ref_id'];}
+              else{$data['get_ref_id'] = '';}
+            }
+          //referrer - end
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="after"><![CDATA[$data['button_continue'] = $this->language->get('button_continue');]]></search>
+        <add><![CDATA[
+          //referrer - start
+            if($ref_module_installed){
+              if (isset($this->error['referrer'])){$data['error_referrer'] = $this->error['referrer'];}
+              else{$data['error_referrer'] = '';}
+            }
+          //referrer - stop
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="after"><![CDATA[$data['customer_groups'] = array();]]></search>
+        <add><![CDATA[
+          //referrer - start
+            if($ref_module_installed){
+              if(isset($this->request->post['referrer'])){$data['referrer'] = $this->request->post['referrer'];}
+              else{$data['referrer'] = '';}
+            }
+          //referrer - stop 
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="after"><![CDATA[private function validate() {]]></search>
+        <add><![CDATA[
+          //referrer - start
+            $this->load->model('account/referrer'); 
+            $ref_module_installed               = $this->model_account_referrer->isInstalled();
+            $data['ref_module_installed'] = $ref_module_installed;
+            
+            if($ref_module_installed){
+              $data['referrer_settings'] = $this->model_setting_setting->getSetting('referrer');
+              if(isset($data['referrer_settings']['referrer_status'])){
+                $referrer_compulsory_reg = $data['referrer_settings']['referrer_ref_compulsory_reg'];
+                if($referrer_compulsory_reg){
+                  if (strlen($this->request->post['referrer']) < 1) {
+                    $this->language->load('account/referrer');
+                    $this->error['referrer'] = $this->language->get('text_reg_compulsory_error');
+                  }
+                  $this->language->load('account/register');
+                }
+                }
+              }
+          //referrer - stop
+        ]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/controller/common/header.php">
+      <operation>
+        <search position="after"><![CDATA[$data['keywords'] = $this->document->getKeywords();]]></search>
+        <add><![CDATA[
+          //referrer - start
+            if(!$data['description']){
+              $this->load->model('setting/setting');
+              $description = $this->model_setting_setting->getSetting('config');
+              $this->document->setDescription($description['config_meta_description']);
+              $data['description'] = $this->document->getDescription();
+            }
+          //referrer - end
+        ]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/model/account/customer.php">
+      <operation>
+        <search position="after"><![CDATA[public function addCustomer($data) {]]></search>
+        <add><![CDATA[
+          //referrer - start
+            $this->load->model('account/referrer');
+            $ref_module_installed               = $this->model_account_referrer->isInstalled();
+            if($ref_module_installed){
+              if(isset($data['referrer'])){
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($data['referrer']) . "'");
+                if($query->row){
+                  $referrar_id = $data['referrer'];
+                }else{
+                  $referrar_id = 0;
+                }
+              }
+            }
+          //referrer - end
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="after"><![CDATA[$address_id = $this->db->getLastId();]]></search>
+        <add><![CDATA[
+          //referrer - start
+            if($ref_module_installed){$this->db->query("UPDATE " . DB_PREFIX . "customer SET referrer_id = '$referrar_id' WHERE customer_id = '$customer_id'");}
+          //referrer - end 
+        ]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/model/checkout/order.php">
+      <operation>
+        <search position="before"><![CDATA[return $order_id;]]></search>
+        <add><![CDATA[
+          //referrer - start
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_status'");
+            if($query->row['value'] == 1){
+              $total_price  = (float)$data['total'];
+              if(isset($data['payment_code']) AND $this->db->escape($data['payment_code']) == 'referrer'){$this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `referrer_price` = referrer_price-$total_price WHERE `customer_id` = '".$data['customer_id']."'");}
+            }
+          //referrer - stop
+        ]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/controller/checkout/confirm.php">
+      <operation>
+        <search position="after"><![CDATA[$order_data['payment_method'] = $this->session->data['payment_method']['title'];]]></search>
+        <add><![CDATA[
+          //referrer - start
+            $data['payment_method_code'] = $this->session->data['payment_method']['code'];
+          //referrer - stop
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="after"><![CDATA[$order_data['payment_method'] = '';]]></search>
+        <add><![CDATA[
+          //referrer - start
+            $data['payment_method_code'] = '';
+          //referrer - stop
+        ]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/view/theme/*/template/account/account.tpl">
+      <operation>
+        <search position="after"><![CDATA[<li><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>]]></search>
+        <add><![CDATA[<?php if($ref_module_installed){ ?><li><a href="<?php echo $referrers; ?>"><?php echo $text_view_refferers; ?></a></li><?php }?>]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/view/theme/*/template/account/register.tpl">
+      <operation>
+        <search position="replace"><![CDATA[echo $action;]]></search>
+        <add><![CDATA[echo $action;if($ref_module_installed){if($get_ref_id){echo '&amp;ref='.$get_ref_id;}}]]></add>
+      </operation>
+      <operation>
+        <search position="after"><![CDATA[<input type="text" name="fax" value="<?php echo $fax; ?>" placeholder="<?php echo $entry_fax; ?>" id="input-fax" class="form-control" />]]></search>
+        <add><![CDATA[
+          <?php if($ref_module_installed){?>
+              </div>
+            </div>
+            <div class="form-group<?php if($referrer_compulsory_reg){echo ' required';} ?>">
+              <label class="col-sm-2 control-label" for="input-fax"><?php echo $text_ref_id; ?></label>
+              <div class="col-sm-10">
+                <input type="text" name="referrer" value="<?php if($referrer != ""){echo $referrer;}else{echo $get_ref_id;}?>"<?php if($get_ref_id){echo ' readonly="readonly"';}?> class="form-control" />
+                <?php if($referrer_compulsory_reg){echo '<small>'.$text_compulsory_ref_info.'</small>';} ?>
+      
+                <?php if ($error_referrer) { ?>
+                <div class="text-danger"><?php echo $error_referrer; ?></div>
+                <?php } ?>
+          <?php } ?>
+        ]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/view/theme/*/template/common/header.tpl">
+      <operation>
+        <search position="after"><![CDATA[<body class="<?php echo $class; ?>">]]></search>
+        <add><![CDATA[
+          <div id="fb-root"></div>
+          <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));</script>
+        ]]></add>
+      </operation>
+    </file>
+    
+<!-- Add referral_id to checkout register -->
+
+    <file name="catalog/controller/checkout/register.php">
+      <operation>
+        <search position="before"><![CDATA[$data['text_checkout_payment_address'] = $this->language->get('text_checkout_payment_address');]]></search>
+        <add><![CDATA[
+          //referrer - start
+            $this->load->model('account/referrer');
+            $ref_module_installed = $this->model_account_referrer->isInstalled();
+            $data['ref_module_installed'] = $ref_module_installed;
+      
+            if($ref_module_installed){
+              $this->load->model('setting/setting');
+              $data['referrer_settings'] = $this->model_account_referrer->getSetting('referrer');
+              if(isset($data['referrer_settings']['referrer_status'])){
+                  $this->language->load('account/referrer');
+                  $data['referrer_compulsory_reg']  = $data['referrer_settings']['referrer_ref_compulsory_reg'];
+                  $data['text_compulsory_ref_info'] = $this->language->get('text_compulsory_ref_info');
+              }else{
+                $data['referrer_compulsory_reg']  = false;
+                $data['text_compulsory_ref_info'] = "";
+              }
+              $data['text_ref_id'] = $this->language->get('text_ref_id');
+      
+            //update
+              if(isset($this->session->data['ref_id'])){
+                $data['get_ref_id'] = (int)$this->session->data['ref_id'];
+              }else{
+                $data['get_ref_id'] = '';
+              }
+            }
+          //referrer - end
+        ]]></add>
+      </operation>
+      <operation>
+        <search position="before"><![CDATA[if ($this->request->post['country_id'] == '') {]]></search>
+        <add><![CDATA[
+          //referrer - start
+           $this->load->model('account/referrer');
+           $ref_module_installed               = $this->model_account_referrer->isInstalled();
+           $data['ref_module_installed'] = $ref_module_installed;
+           if($ref_module_installed){
+             $data['referrer_settings'] = $this->model_account_referrer->getSetting('referrer');
+             if(isset($data['referrer_settings']['referrer_status'])){
+               $referrer_compulsory_reg = $data['referrer_settings']['referrer_ref_compulsory_reg'];
+               if($referrer_compulsory_reg){
+                 if (strlen($this->request->post['referrer']) < 1) {
+                   $this->language->load('account/referrer');
+                   $json['error']['referrer'] = $this->language->get('text_reg_compulsory_error');
+                 }
+               }
+             }
+           }
+          //referrer - stop
+        ]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/view/theme/*/template/checkout/register.tpl">
+      <operation>
+        <search position="after"><![CDATA[<input type="text" name="fax" value="" placeholder="<?php echo $entry_fax; ?>" id="input-payment-fax" class="form-control" />]]></search>
+        <add><![CDATA[
+          <?php if($ref_module_installed){ ?>
+          </div>
+          <div class="form-group<?php if($referrer_compulsory_reg){echo ' required';} ?>">
+            <label class="control-label" for="input-payment-"><?php echo $text_ref_id; ?></label>
+            <input type="text" name="referrer" value="<?php echo $get_ref_id; ?>" id="input-payment-referrer" class="form-control" />
+            <?php } ?>
+        ]]></add>
+      </operation>
+    </file>
+    
+    <file name="catalog/view/theme/*/template/extension/module/account.tpl">
+      <operation>
+        <search position="after"><![CDATA[<a href="<?php echo $edit; ?>" class="list-group-item"><?php echo $text_edit; ?></a> <a href="<?php echo $password; ?>" class="list-group-item"><?php echo $text_password; ?></a>]]></search>
+        <add><![CDATA[<a href="<?php echo $referrers; ?>" class="list-group-item"><?php echo $text_referrers; ?></a>]]></add>
+      </operation>
+    </file>
+
+    <file name="catalog/controller/extension/module/account.php">
+      <operation>
+        <search position="after"><![CDATA[$data['text_recurring'] = $this->language->get('text_recurring');]]></search>
+        <add><![CDATA[
+          $this->language->load('account/referrer');
+          $data['text_referrers'] = $this->language->get('heading_title');
+          $data['referrers'] = $this->url->link('account/referrers', '', 'SSL');
+        ]]></add>
+      </operation>
+    </file>
+    
+     
+    <file name="catalog/controller/api/order.php">
+      <operation>
+        <search position="after"><![CDATA['notify',]]></search>
+        <add><![CDATA['referrer_give_profit',]]></add>
+      </operation>
+      <operation>
+        <search position="before"><![CDATA[$this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify'], $this->request->post['override']);]]></search>
+        <add><![CDATA[
+        //referrer - start
+          $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_status'");
+          if($query->row['value'] == 1 AND isset($this->request->post['referrer_give_profit']) AND $this->request->post['referrer_give_profit'] == 1){
+            $this->model_checkout_order->giveProfit((int)$order_id);
+          }
+        //referrer - end
+          
+        ]]></add>
+      </operation>
+    </file>
+    
+    
+    
+    
+    
+    <file name="catalog/model/checkout/order.php">
+      <operation>
+        <search position="before"><![CDATA[public function addOrder($data) {]]></search>
+        <add><![CDATA[
+          	public function giveProfit($order_id){
+              $query      = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE `order_id` = '$order_id'");
+              $this_order = $query->row;
+            
+              $currency         = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE currency_id = '".(int)$this_order['currency_id']."'");
+              $order_price      = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_order_price'");
+              $order_price_min  = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_min_order_price'");
+              $referrer_level   = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_level'");
+              $profit_type      = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_profit_type'");
+              $this_customer    = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `customer_id` = '".(int)$this_order['customer_id']."'");
+          
+              $data = array();
+              $data['total']            = (float)$this_order['total'];
+              $data['default_currency'] = $currency->row['value']; //value
+              $data['order_price']      = $order_price->row['value'];
+              $data['order_price_min']  = $order_price_min->row['value'];
+              $data['referrer_level']   = $referrer_level->row['value'];
+              $data['profit_type']      = $profit_type->row['value'];
+              $data['customer_id']      = $this_order['customer_id'];
+              $data['ref_id']           = $this_customer->row['referrer_id'];
+              $data['currency_id']      = $this_order['currency_id'];
+              $data['order_id']         = $order_id;
+              $data['order_status_id']  = $this_order['order_status_id'];
+              
+              if(!isset($this_order['payment_code'])){
+                $data['payment_code']     = "";
+          	  }else{
+                $data['payment_code']     = $this_order['payment_code'];
+              }
+          	
+          	
+              $ref_id   = $data['ref_id'];
+              $sponzors = array();
+              $i        = 1;
+              $j        = 0;
+              while($i<=$data['referrer_level']){
+                $query           = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE `customer_id` = '$ref_id'");
+                if($query->row){
+                  $j++;
+                  $sponzors[$j]    = $query->row['customer_id'];
+                  $ref_id = $query->row['referrer_id'];
+                }
+                $i++;
+              }
+          
+          
+              $j = 1;
+              foreach($sponzors as $sponzor){
+              
+                  if($data['profit_type'] == 'percentage'){
+                    $query             = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_profit_level_".$j."_percentage'");
+                    $profit_percentage = $query->row['value'];
+                    
+                    $clear_profit = ($data['total']/100)*$profit_percentage;
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "referrer_log SET customer_id = '".(int)$data['customer_id']."', sponzor_id = '".$sponzor."', order_id = '" . (int)$data['order_id']."', price = '".$clear_profit."', date = NOW(), currency_id = '".(int)$data['currency_id']."', currency_value = '".$data['default_currency']."'");
+                    $this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `referrer_price` = referrer_price+$clear_profit WHERE `customer_id` = '".$sponzor."'");
+                  }
+                  
+                  if($data['profit_type'] == 'fixed'){
+                    $query        = $this->db->query("SELECT `value` FROM " . DB_PREFIX . "setting WHERE `key` = 'referrer_profit_level_".$j."_fixed'");
+                    $profit_fixed = $query->row['value'];
+                    
+                    $clear_profit = $profit_fixed;
+                    $this->db->query("INSERT INTO " . DB_PREFIX . "referrer_log SET customer_id = '".(int)$data['customer_id']."', sponzor_id = '".$sponzor."', order_id = '" . (int)$data['order_id']."', price = '".$clear_profit."', date = NOW(), currency_id = '".(int)$data['currency_id']."', currency_value = '".$data['default_currency']."'");
+                    $this->db->query("UPDATE `" . DB_PREFIX . "customer` SET `referrer_price` = referrer_price+$clear_profit WHERE `customer_id` = '".$sponzor."'");
+                  }
+                $j++;
+              }
+              $this->db->query("UPDATE `" . DB_PREFIX . "order` SET give_referrer_profit = '0' WHERE order_id = '" . (int)$data['order_id'] . "'");
+              return true;
+            }
+        ]]></add>
+      </operation>
+    </file>
+
+	
+	
+  
+  
+  
+</modification>
