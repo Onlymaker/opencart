@@ -20,11 +20,11 @@ class ControllerCommonDashboard extends Controller {
 		);
 
 		// Check install directory exists
-		if (is_dir(dirname(DIR_APPLICATION) . '/install')) {
-			$data['error_install'] = $this->language->get('error_install');
-		} else {
-			$data['error_install'] = '';
+		$htaccess = dirname(DIR_APPLICATION) . '/install/.htaccess';
+		if (!file_exists($htaccess)) {
+			file_put_contents($htaccess, 'Deny from all');
 		}
+		$data['error_install'] = '';
 
 		// Dashboard Extensions
 		$dashboards = array();

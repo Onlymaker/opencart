@@ -1,10 +1,14 @@
 # Config and Htaccess Files
+/upload/php.ini
 /upload/.htaccess
+/upload/install/.htaccess
 /upload/config.php
 /upload/admin/config.php
 
 # Image File
 !/upload/image/no_image.jpg
+/upload/image/catalog/onlymaker/*
+!/upload/image/catalog/onlymaker/index.html
 
 # Image Cache Files
 /upload/image/cache/*

@@ -294,6 +294,8 @@ class ControllerExtensionInstaller extends Controller {
 				$login = ftp_login($connection, $this->config->get('config_ftp_username'), $this->config->get('config_ftp_password'));
 
 				if ($login) {
+					ftp_pasv($connection, true);
+
 					if ($this->config->get('config_ftp_root')) {
 						$root = ftp_chdir($connection, $this->config->get('config_ftp_root'));
 					} else {

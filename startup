@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+workdir=$(cd `dirname ${0}`; pwd)
+
+if [ ${#} -lt 1 ];
+then
+    echo "Parameter missing: PUBLIC_IP"
+    echo "Ignoring docker-compose.yml"
+    echo "Run with --rm option"
+    docker run --name opencart --rm -p 80:80 -v ${workdir}/upload:/var/www/html -d registry.aliyuncs.com/syncxplus/php:5.6.30
+else
+    export FTP=${1}
+    docker-compose up -d
+    docker exec -it `basename ${workdir}`_pure-ftpd_1 pure-pw useradd www -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/www
+    docker exec -it `basename ${workdir}`_pure-ftpd_1 pure-pw useradd onlymaker -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/onlymaker
+fi
