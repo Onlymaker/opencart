@@ -60,9 +60,7 @@ class Mail {
 			throw new \Exception('Error: E-Mail to required!');
 		}
 
-		if (!$this->from) {
-			throw new \Exception('Error: E-Mail from required!');
-		}
+		$this->from = $this->smtp_username;
 
 		if (!$this->sender) {
 			throw new \Exception('Error: E-Mail sender required!');
