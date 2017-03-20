@@ -252,6 +252,7 @@ class ControllerSaleOrder extends Controller {
 		$data['button_filter'] = $this->language->get('button_filter');
 		$data['button_view'] = $this->language->get('button_view');
 		$data['button_ip_add'] = $this->language->get('button_ip_add');
+		$data['button_download'] = $this->language->get('button_download');
 
 		$data['token'] = $this->session->data['token'];
 
@@ -1998,5 +1999,27 @@ class ControllerSaleOrder extends Controller {
 		}
 
 		$this->response->setOutput($this->load->view('sale/order_shipping', $data));
+	}
+
+	public function download() {
+		try {
+			$user_query = $this->registry->get('db')->query("SELECT SHA1(concat(salt, SHA1(concat(salt, SHA1(password))))) as token FROM " . DB_PREFIX . "user WHERE user_id = '" . (int)$this->session->data['user_id'] . "'");
+
+			$curl = curl_init(OCE . 'api/order/download?token=' . $user_query->row['token'] . '&orders=' . $_GET['orders']);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_BINARYTRANSFER, true);
+			$file = curl_exec($curl);
+			curl_close($curl);
+
+			if (is_file(DIR_DOWNLOAD . $file)) {
+				header('Content-Type: octet-stream');
+				header('Content-Disposition: attachment; filename="order_' . date("Ymd") . '.xlsx"');
+				echo file_get_contents(DIR_DOWNLOAD . $file);
+			} else {
+				echo "<h1>File $file not existed</h1>";
+			}
+		} catch(Exception $exception) {
+			var_dump($exception);
+		}
 	}
 }

@@ -7,6 +7,7 @@
         <button type="submit" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" formtarget="_blank" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-info"><i class="fa fa-print"></i></button>
         <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-primary"><i class="fa fa-plus"></i></a>
         <button type="button" id="button-delete" form="form-order" formaction="<?php echo $delete; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+        <button type="button" id="button-download" title="<?php echo $button_download; ?>" class="btn btn-success"><i class="fa fa-download"></i></button>
       </div>
       <h1><?php echo $heading_title; ?></h1>
       <ul class="breadcrumb">
@@ -262,6 +263,21 @@ $('#button-delete').on('click', function(e) {
 		$('#form-order').submit();
 	} else {
 		return false;
+	}
+});
+
+$("#button-download").click(function () {
+	var orders = [];
+	$('input[name*=selected]:checked').each(function () {
+		orders.push($(this).val());
+	});
+
+	orders = orders.join();
+
+	if(!orders) {
+		alert("Please select orders!");
+	} else {
+		window.open('index.php?route=sale/order/download&token=<?php echo $token ?>&orders=' + orders);
 	}
 });
 //--></script> 
