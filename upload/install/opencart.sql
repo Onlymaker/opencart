@@ -8034,3 +8034,41 @@ INSERT INTO `oc_zone_to_geo_zone` (`zone_to_geo_zone_id`, `country_id`, `zone_id
 (107, 222, 3954, 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (108, 222, 3955, 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (109, 222, 3972, 3, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+
+DROP TABLE IF EXISTS `oc_track`;
+CREATE TABLE `oc_track` (
+  `id`          INT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code`        VARCHAR(100)     NOT NULL,
+  `description` VARCHAR(500)     DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX idx_track_code (`code`)
+);
+
+DROP TABLE IF EXISTS `oc_track_access`;
+CREATE TABLE `oc_track_access` (
+  `id`          INT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code`        VARCHAR(100) NOT NULL,
+  `count`       INT(20) UNSIGNED DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX idx_track_access (`code`)
+);
+
+DROP TABLE IF EXISTS `oc_track_register`;
+CREATE TABLE `oc_track_register` (
+  `id`          INT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code`        VARCHAR(100) NOT NULL,
+  `customer_id` INT(11)      NOT NULL,
+  `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX idx_track_register (`code`, `customer_id`)
+);
+
+DROP TABLE IF EXISTS `oc_track_payment`;
+CREATE TABLE `oc_track_payment` (
+  `id`          INT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code`        VARCHAR(100) NOT NULL,
+  `order_id`    INT(11)      NOT NULL,
+  `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX idx_track_payment (`code`, `order_id`)
+);

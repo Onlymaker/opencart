@@ -3,6 +3,16 @@ class ControllerCheckoutSuccess extends Controller {
 	public function index() {
 		$this->load->language('checkout/success');
 
+		if (isset($this->request->get['ticket']) && isset($this->request->cookie['track_code'])) {
+			$this->load->model('checkout/order');
+			$order = $this->model_checkout_order->getOrder($this->request->get['ticket']);
+
+			if (strtotime('-5 minute') < strtotime($order['date_modified'])) {
+				$this->load->model('track/api');
+				$this->model_track_api->savePayment($this->request->cookie['track_code'], $this->request->get['ticket']);
+			}
+		}
+
 		if (isset($this->session->data['order_id'])) {
 			$this->cart->clear();
 

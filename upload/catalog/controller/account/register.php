@@ -20,6 +20,11 @@ class ControllerAccountRegister extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$customer_id = $this->model_account_customer->addCustomer($this->request->post);
 
+			if (!@empty($this->request->cookie['track_code'])) {
+				$this->load->model('track/api');
+				$this->model_track_api->saveRegister($this->request->cookie['track_code'], $customer_id);
+			}
+
 			// Clear any previous login attempts for unregistered accounts.
 			$this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
 

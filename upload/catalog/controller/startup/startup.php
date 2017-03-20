@@ -188,6 +188,14 @@ class ControllerStartupStartup extends Controller {
 		$this->registry->set('encryption', new Encryption($this->config->get('config_encryption')));
 		
 		// OpenBay Pro
-		$this->registry->set('openbay', new Openbay($this->registry));					
+		$this->registry->set('openbay', new Openbay($this->registry));
+
+		// Track
+		if (defined('TRACE_CODE') && !@empty($this->request->get[TRACE_CODE])) {
+			$this->load->model('track/api');
+			$this->model_track_api->saveAccess($this->request->get[TRACE_CODE]);
+
+			setcookie('track_code', $this->request->get[TRACE_CODE], time() + 7 * 24 * 3600, '/');
+		}
 	}
 }
