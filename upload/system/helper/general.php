@@ -37,3 +37,25 @@ if(!function_exists('hash_equals')) {
 		}
 	}
 }
+
+function trace($message, $context = []) {
+	if (false !== strpos($message, '{') && !empty($context)) {
+		$replacements = [];
+		foreach ($context as $key => $val) {
+			if (is_null($val) || is_scalar($val) || (is_object($val) && method_exists($val, "__toString"))) {
+				$replacements['{' . $key . '}'] = $val;
+			} elseif (is_object($val)) {
+				$replacements['{' . $key . '}'] = '[object ' . get_class($val) . ']';
+			} else {
+				$replacements['{' . $key . '}'] = '[' . gettype($val) . ']';
+			}
+		}
+		$message = strtr($message, $replacements);
+	}
+
+	return file_put_contents(
+		DIR_LOGS . date('Y-m-d') . '.log',
+		date('[Y-m-d H:i:s] ') . $message . PHP_EOL,
+		FILE_APPEND | LOCK_EX
+	);
+}
