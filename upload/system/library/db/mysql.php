@@ -20,6 +20,10 @@ final class MySQL {
 	}
 
 	public function query($sql) {
+		if (defined('DB_SQL_TRACE') && DB_SQL_TRACE) {
+			trace($sql);
+		}
+
 		if ($this->connection) {
 			$resource = mysql_query($sql, $this->connection);
 

@@ -15,6 +15,10 @@ final class MySQLi {
 	}
 
 	public function query($sql) {
+		if (defined('DB_SQL_TRACE') && DB_SQL_TRACE) {
+			trace($sql);
+		}
+
 		$query = $this->connection->query($sql);
 
 		if (!$this->connection->errno) {

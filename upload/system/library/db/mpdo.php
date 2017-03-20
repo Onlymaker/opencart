@@ -49,6 +49,10 @@ final class mPDO {
 	}
 
 	public function query($sql, $params = array()) {
+		if (defined('DB_SQL_TRACE') && DB_SQL_TRACE) {
+			trace($sql);
+		}
+
 		$this->statement = $this->connection->prepare($sql);
 		
 		$result = false;

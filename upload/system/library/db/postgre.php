@@ -16,6 +16,10 @@ final class Postgre {
 	}
 
 	public function query($sql) {
+		if (defined('DB_SQL_TRACE') && DB_SQL_TRACE) {
+			trace($sql);
+		}
+
 		$resource = pg_query($this->link, $sql);
 
 		if ($resource) {

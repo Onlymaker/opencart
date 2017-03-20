@@ -17,6 +17,10 @@ final class MSSQL {
 	}
 
 	public function query($sql) {
+		if (defined('DB_SQL_TRACE') && DB_SQL_TRACE) {
+			trace($sql);
+		}
+
 		$resource = mssql_query($sql, $this->connection);
 
 		if ($resource) {
