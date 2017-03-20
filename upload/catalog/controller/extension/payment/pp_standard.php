@@ -107,6 +107,11 @@ class ControllerExtensionPaymentPPStandard extends Controller {
 			$order_id = 0;
 		}
 
+		trace('PP_STANDARD callback: [{order}, {status}]', [
+			'order' => $order_id,
+			'status' => isset($this->request->post['payment_status']) ? $this->request->post['payment_status'] : 'undefined'
+		]);
+
 		$this->load->model('checkout/order');
 
 		$order_info = $this->model_checkout_order->getOrder($order_id);
@@ -152,18 +157,26 @@ class ControllerExtensionPaymentPPStandard extends Controller {
 					case 'Completed':
 						$receiver_match = (strtolower($this->request->post['receiver_email']) == strtolower($this->config->get('pp_standard_email')));
 
-						$total_paid_match = ((float)$this->request->post['mc_gross'] == $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false));
+						$total_paid = (float)$this->request->post['mc_gross'];
+						$order_price = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+						$total_paid_match = ($total_paid == $order_price) ? true : (round($total_paid, 1) == round($order_price, 1));
 
 						if ($receiver_match && $total_paid_match) {
 							$order_status_id = $this->config->get('pp_standard_completed_status_id');
 						}
 						
 						if (!$receiver_match) {
-							$this->log->write('PP_STANDARD :: RECEIVER EMAIL MISMATCH! ' . strtolower($this->request->post['receiver_email']));
+							trace('PP_STANDARD :: RECEIVER EMAIL MISMATCH! {receiver} {config}', [
+								'receiver' => strtolower($this->request->post['receiver_email']),
+								'config' => strtolower($this->config->get('pp_standard_email'))
+							]);
 						}
 						
 						if (!$total_paid_match) {
-							$this->log->write('PP_STANDARD :: TOTAL PAID MISMATCH! ' . $this->request->post['mc_gross']);
+							trace('PP_STANDARD :: TOTAL PAID MISMATCH! {total} {price}', [
+								'total' => $total_paid,
+								'price' => $order_price
+							]);
 						}
 						break;
 					case 'Denied':
