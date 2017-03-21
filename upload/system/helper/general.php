@@ -38,6 +38,18 @@ if(!function_exists('hash_equals')) {
 	}
 }
 
+function ip() {
+	if(function_exists('getenv')) {
+		if(getenv('Http_X_Forwarded_For')) {
+			return getenv('Http_X_Forwarded_For');
+		} else if(getenv('Http_X_Real_IP')) {
+			return getenv('Http_X_Real_IP');
+		}
+	}
+
+	return $_SERVER['REMOTE_ADDR'];
+}
+
 function trace($message, $context = []) {
 	if (false !== strpos($message, '{') && !empty($context)) {
 		$replacements = [];
@@ -53,9 +65,11 @@ function trace($message, $context = []) {
 		$message = strtr($message, $replacements);
 	}
 
+	$ip = ip();
+
 	return file_put_contents(
 		DIR_LOGS . date('Y-m-d') . '.log',
-		date('[Y-m-d H:i:s] ') . $message . PHP_EOL,
+		date('[Y-m-d H:i:s] [') . $ip . '] ' . $message . PHP_EOL,
 		FILE_APPEND | LOCK_EX
 	);
 }

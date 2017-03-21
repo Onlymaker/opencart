@@ -13,6 +13,7 @@ class Request {
 		$this->cookie = $this->clean($_COOKIE);
 		$this->files = $this->clean($_FILES);
 		$this->server = $this->clean($_SERVER);
+		$this->server['REMOTE_ADDR'] = ip();
 	}
 
 	public function clean($data) {
