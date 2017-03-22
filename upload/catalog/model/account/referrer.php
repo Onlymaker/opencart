@@ -93,7 +93,7 @@ class ModelAccountReferrer extends Model {
   
 	public function getShopURL() {
 	  $query = $this->db->query("SELECT value FROM " . DB_PREFIX . "setting WHERE `key` = 'config_secure'");
-    if(isset($query->row['value'])){$ssl = 'https';}else{$ssl = 'http';}
+    if(isset($query->row['value'])&&$query->row['value']){$ssl = 'https';}else{$ssl = 'http';}
     $url = HTTP_SERVER;
     $url = str_replace('http://','',$url);
     return $ssl.'://'.$url;
