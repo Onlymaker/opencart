@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
   <id>Product Option Image PRO / Изображения опций PRO</id>
-  <version>2.2.2</version>
+  <version>2.2.3b</version>
   <vqmver>2.5.X</vqmver>
   <author>Support: support@liveopencart.com / Поддержка: help@liveopencart.ru</author>
   
@@ -201,7 +201,7 @@
 				
 				$sql_set = "";
 				foreach ($query_pov->row as $pov_key => $pov_value) {
-					$sql_set .= ", `".$pov_key."` = '".$pov_value."' ";
+					$sql_set .= ", `".$pov_key."` = '".$this->db->escape($pov_value)."' ";
 				}
 				$sql_set = substr($sql_set, 1);
 				$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_option_value_id = ".$product_option_value_id." ");
@@ -1235,7 +1235,7 @@
       <add><![CDATA[
       // Product Option Image PRO module <<
       
-      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImages( $result['product_id'], "related_products" ),
+      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImagesForController( $result['product_id'], "related_products" ),
       // >> Product Option Image PRO module
       ]]></add>
     </operation>
@@ -1973,7 +1973,7 @@
 	</file>
 	
   <!-- filter_product.php - eagency theme -->
-  <file path="catalog/controller/" name="product/category.php,module/mega_filter.php,module/filter_product.php,product/search.php,product/special.php,product/manufacturer.php,module/latest.php,module/bestseller.php,module/special.php,module/featured.php,extension/module/latest.php,extension/module/bestseller.php,extension/module/special.php,extension/module/featured.php" error="skip">  
+  <file path="catalog/controller/" name="product/category.php,module/mega_filter.php,module/filter_product.php,product/search.php,product/special.php,product/manufacturer.php,module/latest.php,module/bestseller.php,module/special.php,module/featured.php,extension/module/latest.php,extension/module/bestseller.php,extension/module/special.php,extension/module/featured.php,module/boss_featured.php" error="skip">  
     
     <operation >
       <search position="before"><![CDATA[
@@ -2001,7 +2001,7 @@
 			<ignoreif><![CDATA[Template: EAGENCY]]></ignoreif>
       <add><![CDATA[
       // Product Option Image PRO module <<
-      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImages( isset($result['product_id']) ? $result['product_id'] : (isset($product_info['product_id'])?$product_info['product_id']:0),
+      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImagesForController( isset($result['product_id']) ? $result['product_id'] : (isset($product_info['product_id'])?$product_info['product_id']:0),
         (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
       // >> Product Option Image PRO module
       ]]></add>
@@ -2016,7 +2016,7 @@
       <add><![CDATA[
       // Product Option Image PRO module <<
       
-      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImages( isset($result['product_id']) ? $result['product_id'] : $product_info['product_id'],
+      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImagesForController( isset($result['product_id']) ? $result['product_id'] : $product_info['product_id'],
         (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
       // >> Product Option Image PRO module
       ]]></add>
@@ -2029,7 +2029,7 @@
       <add><![CDATA[
       // Product Option Image PRO module <<
       
-      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImages( isset($result['product_id']) ? $result['product_id'] : $product_info['product_id'],
+      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImagesForController( isset($result['product_id']) ? $result['product_id'] : $product_info['product_id'],
         (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
       // >> Product Option Image PRO module
       ]]></add>
@@ -2042,7 +2042,7 @@
       <add><![CDATA[
       // Product Option Image PRO module <<
       
-      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImages( isset($result['product_id']) ? $result['product_id'] : $product_info['product_id'],
+      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImagesForController( isset($result['product_id']) ? $result['product_id'] : $product_info['product_id'],
         (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
       // >> Product Option Image PRO module
       ]]></add>
@@ -2059,7 +2059,7 @@
       <add><![CDATA[
       // Product Option Image PRO module <<
       
-      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImages( $result['product_id'], (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
+      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImagesForController( $result['product_id'], (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
       // >> Product Option Image PRO module
       ]]></add>
     </operation>
@@ -2073,7 +2073,7 @@
       <add><![CDATA[
       // Product Option Image PRO module <<
       
-      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImages( $product_info['product_id'], (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
+      'option_images'  => $this->model_module_product_option_image_pro->getCategoryImagesForController( $product_info['product_id'], (isset($data['current_class']) && $data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  ),
       // >> Product Option Image PRO module
       ]]></add>
     </operation>
@@ -2126,7 +2126,7 @@
       ]]></add>
     </operation>
 		
-    
+		
   </file>
 	
 	<!-- marketshop_product_tab.php -->
@@ -2222,7 +2222,7 @@
       $this->data['poip_installed'] = $this->model_module_product_option_image_pro->installed();
 			$this->data['current_class'] = str_replace("Controller", "", get_class($this));
 			$this->data['poip_theme_name'] = $this->model_module_product_option_image_pro->getThemeName();
-			
+			/*
       if ( !empty($this->data['sections']) ) {
 				foreach ($this->data['sections'] as &$section) {
 					if (isset($section['items'])) {
@@ -2245,6 +2245,7 @@
 				}
 			}
 			unset($product);
+			*/
       
       // >> Product Option Image PRO module
       ]]></add>
@@ -2285,11 +2286,13 @@
       $this->data['poip_installed'] = $this->model_module_product_option_image_pro->installed();
       $this->data['current_class'] = str_replace("Controller", "", get_class($this));
 			$this->data['poip_theme_name'] = $this->model_module_product_option_image_pro->getThemeName();
+			/*
 			foreach ($this->data['products'] as &$product) {
 				$product['option_images'] = $this->model_module_product_option_image_pro->getCategoryImages( $product['product_id'],
 					(isset($this->data['current_class']) && $this->data['current_class']!= 'ProductCategory' && isset($setting))?($setting):(false)  );
 			}
 			unset($product);
+			*/
       
       // >> Product Option Image PRO module
       ]]></add>
@@ -2311,6 +2314,23 @@
     </operation>
     
   </file>
+	
+	<!-- journal2 compatibility - to not load journal2 on POIP ajax calls (checked on 2.9.1) -->
+	<file name="system/journal2/startup.php" error="skip">  
+    
+    <operation >
+      <search position="after"><![CDATA[
+				$load_theme = !(defined('BLOCK_JOURNAL') && BLOCK_JOURNAL === true);
+      ]]></search>
+      <add><![CDATA[
+				// << Product Option Image PRO
+				if (isset($_GET['route']) && strpos($_GET['route'], 'module/product_option_image_pro') === 0) {
+					$load_theme = false;
+				}
+				// >> Product Option Image PRO 
+			]]></add>
+    </operation>
+	</file>
   
 	<!-- journal2 compatibility -->
 	<file name="catalog/view/theme/*/template/journal2/module/carousel_product.tpl,catalog/view/theme/*/template/journal2/module/custom_sections_product.tpl" error="skip">  
@@ -2641,7 +2661,7 @@
 	</file>
 	
 	<!-- category.tpl etc -->
-	<file path="catalog/view/theme/*/template/" name="module/product_module.tpl,module/marketshop_product_tab.tpl,module/filter_product.tpl,pavdeals/list.tpl,product/product_collection.tpl,common/product_collection.tpl,common/product/default.tpl,common/product/swap.tpl,module/pavproducttabs.tpl,module/filterpro_products.tpl,journal2/module/super_filter_product.tpl,product/category.tpl,product/search.tpl,product/manufacturer_info.tpl,product/special.tpl,module/latest.tpl,module/bestseller.tpl,module/special.tpl,module/featured.tpl,extension/module/latest.tpl,extension/module/bestseller.tpl,extension/module/special.tpl,extension/module/featured.tpl,welldone/listing.php,extension/module/oclayerednavigation/occategory.tpl,extension/module/oclayerednavigation/occategoryfilter.tpl" error="skip">  
+	<file path="catalog/view/theme/*/template/" name="module/product_module.tpl,module/marketshop_product_tab.tpl,module/filter_product.tpl,pavdeals/list.tpl,product/product_collection.tpl,common/product_collection.tpl,common/product/default.tpl,common/product/swap.tpl,module/pavproducttabs.tpl,module/filterpro_products.tpl,journal2/module/super_filter_product.tpl,product/category.tpl,product/search.tpl,product/manufacturer_info.tpl,product/special.tpl,module/latest.tpl,module/bestseller.tpl,module/special.tpl,module/featured.tpl,extension/module/latest.tpl,extension/module/bestseller.tpl,extension/module/special.tpl,extension/module/featured.tpl,welldone/listing.php,extension/module/oclayerednavigation/occategory.tpl,extension/module/oclayerednavigation/occategoryfilter.tpl,module/boss_featured.tpl,extension/module/tg_fashionista_filter_product.tpl" error="skip">  
   <!--<file name="catalog/view/theme/*/template/module/product_module.tpl,catalog/view/theme/*/template/module/marketshop_product_tab.tpl,catalog/view/theme/*/template/module/filter_product.tpl,catalog/view/theme/*/template/pavdeals/list.tpl,catalog/view/theme/*/template/product/product_collection.tpl,catalog/view/theme/*/template/common/product_collection.tpl,catalog/view/theme/*/template/common/product/default.tpl,catalog/view/theme/*/template/common/product/swap.tpl,catalog\view\theme\*\template\module\pavproducttabs.tpl,catalog\view\theme\*\template\module\filterpro_products.tpl,catalog\view\theme\*\template\journal2\module\super_filter_product.tpl,catalog/view/theme/*/template/product/category.tpl,catalog/view/theme/*/template/product/search.tpl,catalog/view/theme/*/template/product/manufacturer_info.tpl,catalog/view/theme/*/template/product/special.tpl,catalog/view/theme/*/template/module/latest.tpl,catalog/view/theme/*/template/module/bestseller.tpl,catalog/view/theme/*/template/module/special.tpl,catalog/view/theme/*/template/module/featured.tpl">  -->
     
 		<!--
@@ -3021,6 +3041,10 @@
 						} elseif ($poip_theme_name == "welldone" ) {
 						
 						} elseif ($poip_theme_name == "tt_minoan" ) {
+						
+						} elseif ($poip_theme_name == "OPC080185" ) {
+						
+						} elseif ($poip_theme_name == "bt_parallax" ) {
 							
             } elseif ($poip_theme_name == 'fastor') { 
 						
@@ -3405,6 +3429,60 @@
 			?>
 			]]></add>
     </operation>
+		
+		<!-- theme fashionista compatibility -->
+		<operation error="skip">
+      <search position="replace"><![CDATA[
+				<?php include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product_list.tpl'); ?>
+      ]]></search>
+      <add><![CDATA[
+			<?php
+				/* << Product Option Image PRO module */
+				if (class_exists('VQMod')) {
+					include( VQMod::modCheck( modification( 'catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product_list.tpl' ) ) );
+				} else {
+					include( modification( 'catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product_list.tpl' ) );
+				}
+				/*  >> Product Option Image PRO module */
+			?>
+			]]></add>
+    </operation>
+		
+		<!-- theme fashionista compatibility -->
+		<operation error="skip">
+      <search position="replace"><![CDATA[
+				<?php include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product_grid.tpl'); ?>
+      ]]></search>
+      <add><![CDATA[
+			<?php
+				/* << Product Option Image PRO module  */
+				if (class_exists('VQMod')) {
+					include( VQMod::modCheck( modification( 'catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product_grid.tpl' ) ) );
+				} else {
+					include( modification( 'catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product_grid.tpl' ) );
+				}
+				/*  >> Product Option Image PRO module */
+			?>
+			]]></add>
+    </operation>
+		
+		<!-- theme fashionista compatibility -->
+		<operation error="skip">
+      <search position="replace"><![CDATA[
+				<?php include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product.tpl'); ?>
+      ]]></search>
+      <add><![CDATA[
+			<?php
+				/* << Product Option Image PRO module  */
+				if (class_exists('VQMod')) {
+					include( VQMod::modCheck( modification( 'catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product.tpl' ) ) );
+				} else {
+					include( modification( 'catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/product.tpl' ) );
+				}
+				/*  >> Product Option Image PRO module */
+			?>
+			]]></add>
+    </operation>
     
     <!-- opc1000 - Fashion Store 2.0 theme -->
     <operation error="skip">
@@ -3486,8 +3564,8 @@
     </operation>
 	</file>
 	
-	<!-- stowear && themeglobal compatibility - grid-->
-	<file name="catalog/view/theme/*/template/new_elements/product.tpl,catalog/view/theme/*/template/themeglobal/product_grid.tpl" error="skip">
+	<!-- stowear && themeglobal && tg fashionista compatibility - grid-->
+	<file name="catalog/view/theme/*/template/new_elements/product.tpl,catalog/view/theme/*/template/themeglobal/product_grid.tpl,catalog/view/theme/*/template/themeglobal/product.tpl" error="skip">
 		
 		<operation>
 			<search position="after" error="skip"><![CDATA[

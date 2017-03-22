@@ -1,5 +1,5 @@
 <script type="text/javascript"><!--
-	// Diamond
+	// Glorious // 2017/03/09
 
 	var poip_product_custom = function(){
 		poip_product_default.call(this);
@@ -26,7 +26,6 @@
 	poip_product_custom.prototype.replace_setVisibleImages = function(images, counter) {
 		var this_object = this;
 		
-		clearTimeout(this_object.set_visible_images_timer_id);
 		if (!counter) counter = 1;
 		if (counter == 100) {
 			this_object.set_visible_images_timer_id = false;
@@ -39,7 +38,6 @@
 				$('.image-additional').before('<div id="poip_images" style="display:none;"></div>');
 				var added_img = [];
 				$('.image-additional a').each(function(){
-					//$('#poip_images').append( $(this).parent().parent().clone() );
 					if ( $.inArray($(this).attr('href'), added_img) == -1 ) {
 						$('#poip_images').append( $(this).clone() );
 						added_img.push($(this).attr('href'));
@@ -53,42 +51,38 @@
 					return;
 				}
 				this_object.set_visible_images_first_call = false;
-			}
+			} else {
 			
-			var current_imgs = [];
-			$('.image-additional').find('a').each( function(){
-				//if ( $.inArray($(this).attr('href'), current_imgs) == -1) {
+				var current_imgs = [];
+				$('.image-additional').find('a').each( function(){
 					current_imgs.push($(this).attr('href'));
-				//}
-			});
+				});
+				
+				if ( current_imgs.toString() == images.toString() ) {
+					this_object.set_visible_images_timer_id = false;
+					return; // nothing to change
+				}
+			}	
 			
-			if ( current_imgs.toString() == images.toString() ) {
-				this_object.set_visible_images_timer_id = false;
-				return; // nothing to change
-			}
 			
 			var shown_imgs = [];
 			
 			html = '';
 			$('#poip_images a').each(function(){
 				if ( $.inArray($(this).attr('href'), images) != -1 && $.inArray($(this).attr('href'), shown_imgs) == -1 ) {
-					
-					//current_carousel.addItem('<div>'+ this_object.getElementOuterHTML($(this)) +'</div>');
-					//html += ''+ this_object.getElementOuterHTML($(this).parent().parent()) +'';
 					html += '<div class="slider-item"><div class="product-block">'+ this_object.getElementOuterHTML($(this)) +'</div></div>';
-					
 					shown_imgs.push( $(this).attr('href') );
-					
 				}
 			});
 			
 			$('.image-additional').html(html);
-
+			
 			var myObject = 'additional';
-			if(widthClassOptions[myObject])
+			if(widthClassOptions[myObject]) {
 				var myDefClass = widthClassOptions[myObject];
-			else
+			} else {
 				var myDefClass= 'grid_default_width';
+			}
 			
 			var slider = $("#additional-carousel");
 			slider.sliderCarousel({
@@ -104,7 +98,7 @@
 				goToFirst : true,
 				goToFirstSpeed : 1000,
 				goToFirstNav : true,
-				pagination : false,
+				pagination : true,
 				paginationNumbers: false,
 				responsive: true,
 				responsiveRefreshRate : 200,
@@ -129,10 +123,6 @@
 		return true;
 	}
 	
-	poip_product_custom.prototype.replace_getMainImage = function() {
-		return $('#cloud-zoom');
-	}
-	
 	poip_product_custom.prototype.if_refreshPopupImagesBody = function() {
 		var this_object = this;
 		
@@ -145,6 +135,7 @@
 					enabled:true
 				}
 			});
+			this_object.getMainImage().off('click');
 			this_object.getMainImage().on('click', function(event) {
 				this_object.eventMainAImgClick(event, this);
 			});
@@ -161,22 +152,6 @@
 		}
 		
 		return true;
-	}
-	
-	poip_product_custom.prototype.if_eventMainAImgClick = function(event, element) {
-		var this_object = this;
-		
-		event.preventDefault();
-		
-		var main_href = $(element).parent().attr('href');
-		var img_cnt = 0;
-		this_object.getAdditionalImagesBlock().find('a').each(function(){
-			if ($(this).attr('href') == main_href) {
-				$('.thumbnails').magnificPopup('open', img_cnt);
-				return;
-			}
-			img_cnt++;
-		});
 	}
 	
 	// >> REPLACING FUNCTIONS	

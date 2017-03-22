@@ -5,6 +5,8 @@
 class ModelModuleProductOptionImagePro extends Model {
   
 	private $theme_name = '';
+	private $installed = null;
+	private $cache_product_option_settings = array();
 	
   public function getThemeName() {
 		
@@ -37,6 +39,7 @@ class ModelModuleProductOptionImagePro extends Model {
 			// shorten theme name
 			$themes_shorten = array('so-shoppystore',
 															'so-lovefashion',
+															'OPC080185',
 															'OPC080186',
 															'OPC080189',
 															'OPC080190',
@@ -62,12 +65,17 @@ class ModelModuleProductOptionImagePro extends Model {
   }
   
   public function installed() {
+		
+		//$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension WHERE `type` = 'module' AND `code` = 'product_option_image_pro'");
+		//return $query->num_rows;
     
-    $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension WHERE `type` = 'module' AND `code` = 'product_option_image_pro'");
-    
+		if ( is_null($this->installed) ) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension WHERE `type` = 'module' AND `code` = 'product_option_image_pro'");
+			$this->installed = $query->num_rows;
+		}
     // not working in mijoshop
     //$query = $this->db->query('SHOW TABLES LIKE "' . DB_PREFIX . 'poip_option_image"');
-    return $query->num_rows;
+    return $this->installed;
   }
 	
 	public function getTemplateIncludeFileName($suffix, $default_theme=false) {
@@ -121,6 +129,14 @@ class ModelModuleProductOptionImagePro extends Model {
 		}
 		return $poip_ov;
 	}
+	
+	private function getProductMainImage($p_product_id) {
+		$query = $this->db->query("SELECT `image` FROM `".DB_PREFIX."product` WHERE `product_id` = '".(int)$p_product_id."' ");
+		if ( $query->num_rows ) {
+			return $query->row['image'];
+		}
+		return '';
+	}
   
   public function addMainProductImageToAdditional($product_id, $product_images) {
   //public function addMainProductImageToAdditional($product_id, &$product_images) {
@@ -136,17 +152,19 @@ class ModelModuleProductOptionImagePro extends Model {
 				if ( $poip_settings['img_main_to_additional'] == 1 || ( $poip_settings['img_main_to_additional'] == 2 && $product_images ) )
 				
         // if there's not main images in list of additional images, let's add it
-        $product_info = $this->model_catalog_product->getProduct($product_id);
-        if (isset($product_info['image']) && trim($product_info['image']) != "" ) {
+				$product_main_image = $this->getProductMainImage($product_id);
+				if ( $product_main_image ) {
+        //$product_info = $this->model_catalog_product->getProduct($product_id);
+        //if (isset($product_info['image']) && trim($product_info['image']) != "" ) {
           $have_image = false;
           foreach ($product_images as $product_image) {
-            if ($product_image['image'] == $product_info['image']) {
+            if ($product_image['image'] == $product_main_image) {
               $have_image = true;
               break;
             }
           }
           if (!$have_image) {
-            array_unshift($product_images, array('product_id'=>$product_id, 'image'=>$product_info['image'], 'sort_order'=>0, 'product_image_id'=>"-1"));
+            array_unshift($product_images, array('product_id'=>$product_id, 'image'=>$product_main_image, 'sort_order'=>0, 'product_image_id'=>"-1"));
           }
         }
       }
@@ -191,9 +209,25 @@ class ModelModuleProductOptionImagePro extends Model {
   
   
   
-  public function getOptionSettings($product_option_id) {
+  public function getOptionSettings($product_option_id) { // no cache, because cache is used on the higher level (for product option settings)
     
     if (!$this->installed()) return array();
+		
+		/*
+		if ( !isset($this->cache_option_settings[$product_option_id]) ) {
+			$query = $this->db->query(" SELECT PMOS.*, PS.product_option_id
+                                FROM ".DB_PREFIX."poip_main_option_settings PMOS, ".DB_PREFIX."product_option PS
+                                WHERE PS.product_option_id = ".(int)$product_option_id."
+                                  AND PS.option_id = PMOS.option_id
+                                ");
+			if ($query->num_rows) {
+				$this->cache_option_settings[$product_option_id] = $query->row;
+			} else {
+				$this->cache_option_settings[$product_option_id] = array();
+			}
+		}
+		return $this->cache_option_settings[$product_option_id];
+		*/
     
     $query = $this->db->query(" SELECT PMOS.*, PS.product_option_id
                                 FROM ".DB_PREFIX."poip_main_option_settings PMOS, ".DB_PREFIX."product_option PS
@@ -214,30 +248,35 @@ class ModelModuleProductOptionImagePro extends Model {
     
     $option_settings = array();
     if (!$this->installed()) return $option_settings;
+		
+		if ( !isset($this->cache_product_option_settings[$product_option_id]) ) {
     
-    $poip_settings = $this->config->get('poip_module');
-    $poip_option_settings = $this->getOptionSettings($product_option_id);
-    
-    $query = $this->db->query("SELECT * FROM ".DB_PREFIX."poip_option_settings WHERE product_option_id = ".(int)$product_option_id." ");
-    
-    $settings_names = $this->getSettingsNames();
-    
-    foreach ($settings_names as $setting_name) {
-      if ($query->row && isset($query->row[$setting_name]) && $query->row[$setting_name] != 0) {
-        $option_settings[$setting_name] = $query->row[$setting_name]-1;
-        
-      } elseif (isset($poip_option_settings[$setting_name]) && $poip_option_settings[$setting_name] != 0) {
-        $option_settings[$setting_name] = $poip_option_settings[$setting_name]-1;
-        
-      } elseif (isset($poip_settings[$setting_name])) {
-        $option_settings[$setting_name] = $poip_settings[$setting_name];
-        
-      } else {  
-        $option_settings[$setting_name] = false;
-      }
-    }
-    
-    return $option_settings;
+			$poip_settings = $this->config->get('poip_module');
+			$poip_option_settings = $this->getOptionSettings($product_option_id);
+			
+			$query = $this->db->query("SELECT * FROM ".DB_PREFIX."poip_option_settings WHERE product_option_id = ".(int)$product_option_id." ");
+			
+			$settings_names = $this->getSettingsNames();
+			
+			foreach ($settings_names as $setting_name) {
+				if ($query->row && isset($query->row[$setting_name]) && $query->row[$setting_name] != 0) {
+					$option_settings[$setting_name] = $query->row[$setting_name]-1;
+					
+				} elseif (isset($poip_option_settings[$setting_name]) && $poip_option_settings[$setting_name] != 0) {
+					$option_settings[$setting_name] = $poip_option_settings[$setting_name]-1;
+					
+				} elseif (isset($poip_settings[$setting_name])) {
+					$option_settings[$setting_name] = $poip_settings[$setting_name];
+					
+				} else {  
+					$option_settings[$setting_name] = false;
+				}
+			}
+			
+			$this->cache_product_option_settings[$product_option_id] = $option_settings;
+		}
+	
+		return $this->cache_product_option_settings[$product_option_id];
     
   }
   
@@ -294,8 +333,8 @@ class ModelModuleProductOptionImagePro extends Model {
       }
     }
     
-    
-    $query = $this->db->query(" SELECT POIP.*, OV.image thumb, OD.name option_name, OVD.name value_name, POV.option_id, POV.option_value_id
+		
+		$query = $this->db->query(" SELECT POIP.*, OV.image thumb, OD.name option_name, OVD.name value_name, POV.option_id, POV.option_value_id
                                   FROM ".DB_PREFIX."poip_option_image POIP
                                       ,".DB_PREFIX."product_option_value POV
                                       ,".DB_PREFIX."option_value OV LEFT JOIN ".DB_PREFIX."option_value_description OVD ON (OVD.option_value_id = OV.option_value_id AND OVD.language_id = ".$language_id.")
@@ -566,7 +605,24 @@ class ModelModuleProductOptionImagePro extends Model {
     
     return $ids;
   }
+	
+	//public function 
+	
+	private function themeHasTemplateForProductLists() {
+		if ( is_null($this->themeHasTemplateForProductLists) ) {
+			$template_file = $this->getTemplateIncludeFileName('list');
+			$this->themeHasTemplateForProductLists = $template_file ? true : false;
+		}
+		return $this->themeHasTemplateForProductLists;
+	}
   
+	public function getCategoryImagesForController($product_id, $module_setting=false) { // returns images only if it is needed (old style option images in product lists displaying - not trough additional ajax call)
+		if ( !$this->themeHasTemplateForProductLists() ) {
+			return $this->getCategoryImages($product_id, $module_setting);
+		} else {
+			return array();
+		}
+	}
   
   public function getCategoryImages($product_id, $module_setting=false, $return_ordered=false) { // $return_ordered currently not used
     
@@ -656,7 +712,7 @@ class ModelModuleProductOptionImagePro extends Model {
             }
             $image_pov[0];
 						
-						$category_image_data = array(	'icon'=>$this->model_tool_image->resize($image_pov[0]['thumb'], $icon_width, $icon_height),
+						$category_image_data = array(	'icon'=>$this->model_tool_image->resize($image_pov[0]['image'], $icon_width, $icon_height),
 																					'thumb'=>$this->model_tool_image->resize($image_pov[0]['image'], $image_product_width, $image_product_height),
 																					'image'=>$image_pov[0]['image'],
 																					'option_id'=>$image_pov[0]['option_id'],

@@ -29,7 +29,7 @@ class ModelModuleProductOptionImagePro extends Model {
   }
   
   public function current_version() {
-    return '2.2.2';
+    return '2.2.3b';
   }
   
   public function getOptionsForImages($product_id) {

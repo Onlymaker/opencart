@@ -363,7 +363,10 @@
 		var this_object = this;
 		
 		if ( typeof(this_object.if_eventMainAImgClick) == 'function' ) {
-			return this_object.if_eventMainAImgClick(event, element);
+			var if_result = this_object.if_eventMainAImgClick(event, element);
+			if ( if_result ) {
+				return if_result;
+			}
 		}
 		
 		event.preventDefault();

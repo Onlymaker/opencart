@@ -122,6 +122,7 @@
 	}
 	
 	poip_product_custom.prototype.if_refreshPopupImagesBody = function() {
+		var this_object = this;
 		
 		if ( $('#additional-carousel a:visible').length ) {
 			//$('#additional-carousel').magnificPopup({
