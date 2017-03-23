@@ -65,7 +65,7 @@ final class Loader {
 	}
 
 	public function view($route, $data = array()) {
-		$output = null;
+		$registry = $this->registry;
 		
 		// Sanitize the call
 		$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
@@ -84,7 +84,7 @@ final class Loader {
 				$template->set($key, $value);
 			}
 		
-			$output = $template->render($route . '.tpl');
+			$output = $template->render($route . '.tpl', $registry);
 		}
 		
 		// Trigger the post events

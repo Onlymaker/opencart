@@ -48,6 +48,11 @@ $registry->set('session', $session);
 // Cache 
 $registry->set('cache', new Cache($config->get('cache_type'), $config->get('cache_expire')));
 
+//Unlimited colors theme
+require_once(DIR_SYSTEM . 'library/themeoptions.php');
+$theme_options = new ThemeOptions($registry, $loader);
+$registry->set('theme_options', $theme_options);
+
 // Url
 if ($config->get('url_autostart')) {
 	$registry->set('url', new Url($config->get('site_base'), $config->get('site_ssl')));
