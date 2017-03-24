@@ -76,10 +76,12 @@ class FacebookCurlHttpClient implements FacebookHttpClientInterface
      */
     public function send($url, $method, $body, array $headers, $timeOut)
     {
+        trace('Facebook request: {url}', ['url' => $url]);
         $this->openConnection($url, $method, $body, $headers, $timeOut);
         $this->sendRequest();
 
         if ($curlErrorCode = $this->facebookCurl->errno()) {
+            trace('Facebook error: ' . $this->facebookCurl->error());
             throw new FacebookSDKException($this->facebookCurl->error(), $curlErrorCode);
         }
 
