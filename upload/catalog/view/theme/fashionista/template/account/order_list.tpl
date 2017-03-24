@@ -26,7 +26,7 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
         <td class="text-right"><?php echo $order['products']; ?></td>
         <td class="text-left"><?php echo $order['name']; ?></td>
         <td class="text-right"><?php echo $order['total']; ?></td>
-        <td class="text-right"><a href="<?php echo $order['href']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="button"><i class="fa fa-eye"></i></a></td>
+        <td class="text-right"><a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="button"><i class="fa fa-eye"></i></a></td>
       </tr>
       <?php } ?>
     </tbody>
