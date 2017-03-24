@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	
+	<code>2.3_compatibility_fix</code>
+	<name>OpenCart 2.3 Extension Compatibility Fix</name>
+	<version>v230.4</version>
+	<author>Clear Thinking, LLC</author>
+	<link>http://www.getclearthinking.com/contact</link>
+	
+	<file path="admin/controller/common/column_left.php" error="skip">
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				if ($this->user->hasPermission('access', 'extension/extension')) {
+			]]></search>
+			<add position="before" trim="true"><![CDATA[
+				$extension_children = array();
+				$extension_types = array(
+					'analytics'	=> 'Analytics',
+					'fraud'		=> 'Anti-Fraud',
+					'captcha'	=> 'Captcha',
+					'dashboard'	=> 'Dashboard',
+					'feed'		=> 'Feeds',
+					'module'	=> 'Modules',
+					'total'		=> 'Order Totals',
+					'payment'	=> 'Payments',
+					'shipping'	=> 'Shipping',
+					'theme'		=> 'Themes',
+				);
+				foreach ($extension_types as $key => $value) {
+					if (!$this->user->hasPermission('access', 'extension/extension/' . $key)) continue;
+					$extension_children[] = array(
+						'name'		=> $value,
+						'href'		=> $this->url->link('extension/extension', 'type=' . $key . '&token=' . $this->session->data['token'], true),
+						'children'	=> array(),
+					);
+				}
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				'href'     => $this->url->link('extension/extension', 'token=' . $this->session->data['token'], true),
+			]]></search>
+			<add position="replace" offset="1" trim="true"><![CDATA[
+				'href'		=> '',
+				'children'	=> $extension_children,
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/controller/extension/*.php" error="skip">
+		<operation error="skip">
+			<search><![CDATA[
+				public function index() {
+			]]></search>
+			<add position="after" trim="true"><![CDATA[
+				$route = explode('/', $this->request->get['route']);
+				$extension_types = array(
+					'analytics',
+					'captcha',
+					'feed',
+					'fraud',
+					'module',
+					'payment',
+					'shipping',
+					'theme',
+					'total',
+				);
+				if (in_array($route[1], $extension_types)) {
+					$this->response->redirect($this->url->link('extension/extension', 'type=' . $route[1] . '&token=' . $this->session->data['token'], true));
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/controller/extension/extension.php" error="skip">
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				$extension = basename($file, '.php');
+			]]></search>
+			<add position="after" trim="true"><![CDATA[
+				if ($extension == 'menu') continue;
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				$this->response->setOutput($this->load->view('extension/extension
+			]]></search>
+			<add position="before" trim="true"><![CDATA[
+				$sort_field = array();
+				foreach ($data['categories'] as $key => $value) $sort_field[$key] = $value['text'];
+				array_multisort($sort_field, SORT_ASC, $data['categories']);
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/controller/extension/extension/*.php" error="skip">
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				$this->response->setOutput($this->load->view('extension/extension/
+			]]></search>
+			<add position="before" trim="true"><![CDATA[
+				$ex_names = array();
+				$sort_field = array();
+				foreach ($data['extensions'] as $key => $value) {
+					if (in_array($value['name'], $ex_names)) {
+						unset($data['extensions'][$key]);
+					} else {
+						$sort_field[$key] = $value['name'];
+						$ex_names[] = $value['name'];
+					}
+				}
+				array_multisort($sort_field, SORT_ASC, $data['extensions']);
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="admin/model/user/user_group.php" error="skip">
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				public function editUserGroup($user_group_id, $data) {
+			]]></search>
+			<add position="after" trim="true"><![CDATA[
+				$extension_types = array(
+					'analytics',
+					'fraud',
+					'captcha',
+					'dashboard',
+					'feed',
+					'module',
+					'total',
+					'payment',
+					'shipping',
+					'theme',
+				);
+				
+				foreach ($data['permission'] as $key => $permission) {
+					foreach ($permission as $value) {
+						$parts = explode('/', $value);
+						if (in_array($parts[0], $extension_types)) {
+							$data['permission'][$key][] = 'extension/' . $value;
+						}
+					}
+				}
+			]]></add>
+		</operation>
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				$data[$type][] = $route;
+			]]></search>
+			<add position="after" trim="true"><![CDATA[
+				if (strpos($route, 'extension/') === 0) {
+					$data[$type][] = str_replace('extension/', '', $route);
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="system/engine/loader.php" error="skip">
+		<operation error="skip">
+			<search trim="true"><![CDATA[
+				$output = $action->execute($this->registry, array(&$data));
+			]]></search>
+			<add position="after" trim="true"><![CDATA[
+				if ($output instanceof Exception) {
+					$action = new Action(str_replace('extension/', '', $route));
+					$output = $action->execute($this->registry, array(&$data));
+				}
+			]]></add>
+		</operation>
+	</file>
+	
+</modification>
