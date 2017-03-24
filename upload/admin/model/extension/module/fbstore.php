@@ -58,7 +58,7 @@ class ModelExtensionModuleFBStore extends Model {
 
   	public function login($fb){
 
-		$helper = $fb->getJavaScriptHelper();
+		//$helper = $fb->getJavaScriptHelper();
 
 		$accessToken = $this->getToken($fb);
 			
@@ -175,7 +175,7 @@ class ModelExtensionModuleFBStore extends Model {
 	  			$access_token = $this->getModuleSettings($page_id)['access_token'];
 	  			if($access_token){
 
-	  			try {  			
+	  			/*try {
 	  				$response = $fb->get('/me', $access_token);	
 	  			}
 	  			catch(Facebook\Exceptions\FacebookResponseException $e) {
@@ -184,7 +184,7 @@ class ModelExtensionModuleFBStore extends Model {
 					}
 			  		$data['moduleURL'] = $this->url->link('module/fbstore', 'token=' . $this->session->data['token'].$module_id, true);
 			  		return $this->response->redirect($data['moduleURL']);	
-				}
+				}*/
 
 
 	  			return $access_token;
@@ -193,14 +193,14 @@ class ModelExtensionModuleFBStore extends Model {
 
   			if(isset($_SESSION['fb_access_token'])){
 				
-				try {  			
+				/*try {
 	  				$response = $fb->get('/me', $_SESSION['fb_access_token']);	
 	  			}
 	  			catch(Facebook\Exceptions\FacebookResponseException $e) {
 					unset($_SESSION['fb_access_token']);
 					$data['moduleURL'] = $this->url->link('module/fbstore', 'token=' . $this->session->data['token'].$module_id, true);
 			  		return $this->response->redirect($data['moduleURL']);	
-				}
+				}*/
 				 
 				return $_SESSION['fb_access_token'];
 				
