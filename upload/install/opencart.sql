@@ -3317,7 +3317,8 @@ INSERT INTO `oc_setting` (`store_id`, `code`, `key`, `value`, `serialized`) VALU
 (0, 'dashboard_recent', 'dashboard_recent_status', '1', 0),
 (0, 'dashboard_recent', 'dashboard_recent_sort_order', '8', 0),
 (0, 'dashboard_activity', 'dashboard_activity_width', '4', 0),
-(0, 'dashboard_recent', 'dashboard_recent_width', '8', 0);
+(0, 'dashboard_recent', 'dashboard_recent_width', '8', 0),
+(0, 'fbstore', 'fbstore', '{\"LicenseCode\":\"I5860O-5442YR-DZ93AJ-2HE5BJ-RZSVZZ\",\"LicensedOn\":\"1490322976\",\"License\":{\"productTitle\":\"FacebookStore - Connect Your OpenCart Store and Sell Products on Facebook\",\"productId\":\"8CS2ZS7U0K\",\"licenseTitle\":\"Single-domain license with 1 year Premium Support and Updates\",\"licenseCode\":\"I5860O-5442YR-DZ93AJ-2HE5BJ-RZSVZZ\",\"licensePurchaseDate\":\"2017-03-13 08:08:08\",\"licenseExpireDate\":\"2018-03-13 08:08:08\",\"licenseExpireDateTimestamp\":1520921288,\"licenseDomainsUsed\":[\"onlymaker.cn\"],\"customerName\":\"onlymaker\",\"customerEmail\":\"henry_xiong@onlymaker.com\",\"status\":\"Active\",\"maxDomains\":1,\"error\":false,\"licensedOn\":1490323722}}', 1);
 
 -- --------------------------------------------------------
 
