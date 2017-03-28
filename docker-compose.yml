@@ -1,5 +1,8 @@
 version: '2'
 services:
+    memcache:
+        image: memcached:1.4.35-alpine
+        restart: always
     opencart:
         image: registry.aliyuncs.com/syncxplus/php:5.6.30
         restart: always
@@ -7,6 +10,10 @@ services:
             - '80:80'
         volumes:
             - ./upload:/var/www/html
+        links:
+            - memcache:memcache
+        depends_on:
+            - memcache
     pure-ftpd:
         image: stilliard/pure-ftpd:hardened
         restart: always
