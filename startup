@@ -7,7 +7,8 @@ then
     echo "Parameter missing: PUBLIC_IP"
     echo "Ignoring docker-compose.yml"
     echo "Run with --rm option"
-    docker run --name opencart --rm -p 80:80 -v ${workdir}/upload:/var/www/html -d registry.aliyuncs.com/syncxplus/php:5.6.30
+    docker run --name memcached --restart always -d memcached:1.4.35-alpine
+    docker run --name opencart --restart always -p 80:80 -v ${workdir}/upload:/var/www/html --link memcached:memcache -d registry.aliyuncs.com/syncxplus/php:5.6.30
 else
     export FTP=${1}
     docker-compose up -d
