@@ -10,7 +10,7 @@ then
     docker run --name memcached --restart always -d memcached:1.4.35-alpine
     docker run --name opencart --restart always -p 80:80 -v ${workdir}/upload:/var/www/html --link memcached:memcache -d registry.aliyuncs.com/syncxplus/php:5.6.30
 else
-    export FTP=${1}
+    export PUBLIC_IP=${1}
     docker-compose up -d
     docker exec -it `basename ${workdir}`_pure-ftpd_1 pure-pw useradd www -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/www
     docker exec -it `basename ${workdir}`_pure-ftpd_1 pure-pw useradd onlymaker -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/onlymaker
