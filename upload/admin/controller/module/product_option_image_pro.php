@@ -139,9 +139,9 @@ class ControllerModuleProductOptionImagePro extends Controller {
 	
 	private function PHPExcelPath($short = false) {
 		if ($short) {
-			return './system/PHPExcel/Classes/PHPExcel.php';
+			return './system/library/PHPExcel.php';
 		} else {
-			return DIR_SYSTEM . '/PHPExcel/Classes/PHPExcel.php';
+			return DIR_SYSTEM . '/library/PHPExcel.php';
 		}
 	}
 	
