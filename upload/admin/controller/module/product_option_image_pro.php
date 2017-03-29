@@ -194,6 +194,10 @@ class ControllerModuleProductOptionImagePro extends Controller {
 					$json['error'] = "option_value_id not found";
 				}
 				
+				if (!isset($head['sku'])) {
+					$head['sku'] = false;
+				}
+
 				if (!isset($json['error'])) {
 					
 					$images = 0;
@@ -203,8 +207,8 @@ class ControllerModuleProductOptionImagePro extends Controller {
 						$row = $data[$i];
 						
 						if (trim((string)$row[$head['image']]) != "") {
-							
-							if ($this->model_module_product_option_image_pro->add_product_option_value_image((int)$row[$head['product_id']], (int)$row[$head['option_value_id']], (string)$row[$head['image']])) {
+							$sku = $head['sku'] && !empty($row[$head['sku']]) ? (string)$row[$head['sku']] : '';
+							if ($this->model_module_product_option_image_pro->add_product_option_value_image((int)$row[$head['product_id']], (int)$row[$head['option_value_id']], (string)$row[$head['image']], $sku)) {
 								$images++;
 							} else {
 								$skipped++;
@@ -281,6 +285,7 @@ PHPExcel_CachedObjectStorageFactory::cache_to_sqlite3;
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 1, 'product_id');
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 1, 'option_value_id');
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 1, 'image');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 1, 'sku');
 			
 			
 			$objPHPExcel->getActiveSheet()->fromArray($data,null,'A2');

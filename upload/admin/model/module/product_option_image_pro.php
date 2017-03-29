@@ -177,7 +177,13 @@ class ModelModuleProductOptionImagePro extends Model {
   
   // for export
   public function getAllImages() {
-    $query = $this->db->query(" SELECT POIP.product_id, POV.option_value_id, POIP.image
+    $check = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "product_option_value` WHERE field='sub_sku'");
+
+    if (!$check->num_rows) {
+      $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_option_value` ADD COLUMN `sub_sku` varchar(100) DEFAULT ''" );
+    }
+
+    $query = $this->db->query(" SELECT POIP.product_id, POV.option_value_id, POIP.image, POV.sub_sku
                                 FROM ".DB_PREFIX."poip_option_image POIP, ".DB_PREFIX."product_option_value POV
                                 WHERE POIP.product_option_value_id = POV.product_option_value_id
                                 ");
@@ -272,10 +278,20 @@ class ModelModuleProductOptionImagePro extends Model {
     
   }
   
-  public function add_product_option_value_image($product_id, $option_value_id, $image) {
+  public function add_product_option_value_image($product_id, $option_value_id, $image, $sku) {
     
     $query = $this->db->query("SELECT * FROM ".DB_PREFIX."product_option_value WHERE product_id = ".(int)$product_id." AND option_value_id = ".(int)$option_value_id." ");
     if ($query->num_rows) {
+      if ($sku) {
+        if (!isset($query->row['sub_sku'])) {
+          $query->row['sub_sku'] = '';
+          $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_option_value` ADD COLUMN `sub_sku` varchar(100) DEFAULT ''" );
+        }
+
+        if ($sku != $query->row['sub_sku']) {
+          $this->db->query("UPDATE " . DB_PREFIX . "product_option_value SET sub_sku = '" . $sku . "' WHERE product_id = " . (int)$product_id . " AND option_value_id = " . (int)$option_value_id);
+        }
+      }
       
       $query_i = $this->db->query("SELECT * FROM ".DB_PREFIX."poip_option_image
                                     WHERE product_id = ".(int)$product_id."
