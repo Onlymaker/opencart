@@ -286,9 +286,8 @@ class ModelModuleProductOptionImagePro extends Model {
         if (!isset($query->row['sub_sku'])) {
           $query->row['sub_sku'] = '';
           $this->db->query("ALTER TABLE `" . DB_PREFIX . "product_option_value` ADD COLUMN `sub_sku` varchar(100) DEFAULT ''" );
-        }
-
-        if ($sku != $query->row['sub_sku']) {
+          $this->db->query("UPDATE " . DB_PREFIX . "product_option_value SET sub_sku = '" . $sku . "' WHERE product_id = " . (int)$product_id . " AND option_value_id = " . (int)$option_value_id);
+        } else if ($sku != $query->row['sub_sku']) {
           $this->db->query("UPDATE " . DB_PREFIX . "product_option_value SET sub_sku = '" . $sku . "' WHERE product_id = " . (int)$product_id . " AND option_value_id = " . (int)$option_value_id);
         }
       }
