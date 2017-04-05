@@ -17,8 +17,8 @@ class ControllerCommonFileManager extends Controller {
 		}
 
 		// Make sure we have the correct directory
-		if (isset($this->request->get['directory'])) {
-			$directory = rtrim(DIR_IMAGE . 'catalog/onlymaker/' . str_replace('*', '', $this->request->get['directory']), '/');
+		if (isset($this->request->get['directory']) && !empty($this->request->get['directory'])) {
+			$directory = rtrim(DIR_IMAGE . 'catalog/' . str_replace('*', '', $this->request->get['directory']), '/');
 		} else {
 			$directory = DIR_IMAGE . 'catalog/onlymaker';
 		}
@@ -139,7 +139,7 @@ class ControllerCommonFileManager extends Controller {
 		// Parent
 		$url = '';
 
-		if (isset($this->request->get['directory'])) {
+		if (isset($this->request->get['directory']) && $this->request->get['directory'] != 'onlymaker') {
 			$pos = strrpos($this->request->get['directory'], '/');
 
 			if ($pos) {
@@ -214,8 +214,8 @@ class ControllerCommonFileManager extends Controller {
 		}
 
 		// Make sure we have the correct directory
-		if (isset($this->request->get['directory'])) {
-			$directory = rtrim(DIR_IMAGE . 'catalog/onlymaker/' . $this->request->get['directory'], '/');
+		if (isset($this->request->get['directory']) && !empty($this->request->get['directory'])) {
+			$directory = rtrim(DIR_IMAGE . 'catalog/' . $this->request->get['directory'], '/');
 		} else {
 			$directory = DIR_IMAGE . 'catalog/onlymaker';
 		}
@@ -309,8 +309,8 @@ class ControllerCommonFileManager extends Controller {
 		}
 
 		// Make sure we have the correct directory
-		if (isset($this->request->get['directory'])) {
-			$directory = rtrim(DIR_IMAGE . 'catalog/onlymaker/' . $this->request->get['directory'], '/');
+		if (isset($this->request->get['directory']) && !empty($this->request->get['directory'])) {
+			$directory = rtrim(DIR_IMAGE . 'catalog/' . $this->request->get['directory'], '/');
 		} else {
 			$directory = DIR_IMAGE . 'catalog/onlymaker';
 		}
