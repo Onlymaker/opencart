@@ -167,20 +167,7 @@ if($registry->has('theme_options') == true) {
 	<!-- COPYRIGHT
 		================================================== -->
 			<div class="copyright">
-				
 						<div class="container-home pattern <?php if($theme_options->get( 'payment_status' ) != '0') { echo 'withpayment'; } ?>">
-							
-							<!--
-							OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
-							Please donate via PayPal to donate@opencart.com
-							//-->
-							<p>Powered by <a href="http://www.opencart.com">OpenCart</a>  Made by <a href="http://www.themeglobal.com">ThemeGlobal - OpenCart Template Club</a></p>
-							<!--
-							OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
-							Please donate via PayPal to donate@opencart.com
-							//-->
-							
-							
 						</div>
 			</div>
 	
