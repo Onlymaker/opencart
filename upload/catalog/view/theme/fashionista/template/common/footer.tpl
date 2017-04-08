@@ -15,14 +15,9 @@ if($registry->has('theme_options') == true) {
 		);
 	}
 
-
-			$grids = 3; $test = 0;  
-			if($customfooter[$language_id]['contact_status'] == '1') { $test++; } 
-			if($test == 1) { $grids = 25; }
-			if($test == 2) { $grids = 2; }
-
-	
-	?>
+	$customfooter[$language_id]['contact_status'] = 0;
+	$grids = 2;
+?>
 
 	
 	
@@ -129,6 +124,7 @@ if($registry->has('theme_options') == true) {
 							
 							<ul>
 								<li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
+								<li><a href="<?php echo $sizechart; ?>"><?php echo $text_sizechart; ?></a></li>
 								<li><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
 								<li><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>
 							</ul> 
@@ -143,6 +139,8 @@ if($registry->has('theme_options') == true) {
 								<li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
 								<li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
 								<li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
+								<li><a href="<?php echo $dropshipping; ?>"><?php echo $text_dropshipping; ?></a></li>
+								<li><a href="<?php echo $wholesale; ?>"><?php echo $text_wholesale; ?></a></li>
 							</ul>
 						</div>
 						
@@ -156,6 +154,26 @@ if($registry->has('theme_options') == true) {
 								<li><a href="<?php echo $wishlist; ?>"><?php echo $text_wishlist; ?></a></li>
 								<li><a href="<?php echo $newsletter; ?>"><?php echo $text_newsletter; ?></a></li>
 							</ul>
+						</div>
+
+						<!-- Find Us -->
+						<div class="col-sm-4 col-xs-6">
+							<div class="footer_wbd">
+								<h4>Find Us On</h4>
+								<ul>
+									<li><a class="foot_af" rel="nofollow" href="https://www.facebook.com/onlymaker/" title="Facebook" target="_blank"></a></li>
+									<li><a class="foot_at" rel="nofollow" href="https://twitter.com/Only_maker" title="Twitter" target="_blank"></a></li>
+									<li><a class="foot_ap" rel="nofollow" href="https://www.pinterest.com/onlymaker/" title="Pinterest" target="_blank"></a></li>
+									<li><a class="foot_ai" rel="nofollow" href="https://www.instagram.com/onlymakershoes/" title="Instagram" target="_blank"></a></li>
+								</ul>
+							</div>
+							<div class="clearfix" style="clear: both">
+								<h4 style="font-size: 13px; margin-top: 40px; margin-bottom: 20px">Subscribe Onlymaker News Letter</h4>
+								<form>
+									<input onblur="if (this.value == '') this.value = 'Your Email Address';" onfocus="if (this.value == 'Your Email Address') this.value = '';" id="newsletter-email" type="text" value="Your Email Address"/>
+									<input id="newsletter-button" type="submit" value="Subscribe"/>
+								</form>
+							</div>
 						</div>
 					
 				

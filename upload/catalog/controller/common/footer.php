@@ -19,6 +19,9 @@ class ControllerCommonFooter extends Controller {
 		$data['text_order'] = $this->language->get('text_order');
 		$data['text_wishlist'] = $this->language->get('text_wishlist');
 		$data['text_newsletter'] = $this->language->get('text_newsletter');
+		$data['text_dropshipping'] = $this->language->get('text_dropshipping');
+		$data['text_sizechart'] = $this->language->get('text_sizechart');
+		$data['text_wholesale'] = $this->language->get('text_wholesale');
 
 		$this->load->model('catalog/information');
 
@@ -26,10 +29,22 @@ class ControllerCommonFooter extends Controller {
 
 		foreach ($this->model_catalog_information->getInformations() as $result) {
 			if ($result['bottom']) {
-				$data['informations'][] = array(
-					'title' => $result['title'],
-					'href'  => $this->url->link('information/information', 'information_id=' . $result['information_id'])
-				);
+				switch ($result['title']) {
+					case 'Drop Shipping':
+						$data['dropshipping'] = $this->url->link('information/information', 'information_id=' . $result['information_id']);
+						break;
+					case 'Size Chart':
+						$data['sizechart'] = $this->url->link('information/information', 'information_id=' . $result['information_id']);
+						break;
+					case 'Wholesale':
+						$data['wholesale'] = $this->url->link('information/information', 'information_id=' . $result['information_id']);
+						break;
+					default:
+						$data['informations'][] = array(
+							'title' => $result['title'],
+							'href'  => $this->url->link('information/information', 'information_id=' . $result['information_id'])
+						);
+				}
 			}
 		}
 
