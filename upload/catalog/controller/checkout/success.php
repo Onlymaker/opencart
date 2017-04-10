@@ -6,6 +6,7 @@ class ControllerCheckoutSuccess extends Controller {
 		if (isset($this->request->get['ticket']) && isset($this->request->cookie['track_code'])) {
 			$this->load->model('checkout/order');
 			$order = $this->model_checkout_order->getOrder($this->request->get['ticket']);
+			$data['total'] = isset($order['total']) ? $order['total'] : 0.00;
 
 			if (strtotime('-5 minute') < strtotime($order['date_modified'])) {
 				$this->load->model('track/api');

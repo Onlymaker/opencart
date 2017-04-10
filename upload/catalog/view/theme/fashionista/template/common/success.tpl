@@ -11,3 +11,23 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
 <?php include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/themeglobal_bottom.tpl'); ?>
 <?php echo $footer; ?>
 <?php if (isset($webgains)) echo $webgainsUrl; ?>
+<!-- Google Code for OM-purchurs Conversion Page -->
+<script type="text/javascript">
+  /* <![CDATA[ */
+  var google_conversion_id = 939341970;
+  var google_conversion_language = "en";
+  var google_conversion_format = "3";
+  var google_conversion_color = "ffffff";
+  var google_conversion_label = "aYsDCLSd3WsQkvH0vwM";
+  var google_conversion_value = <?php echo $total; ?>;
+  var google_conversion_currency = "USD";
+  var google_remarketing_only = false;
+  /* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+  <div style="display:inline;">
+    <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/939341970/?value=<?php echo $total; ?>&amp;currency_code=USD&amp;label=aYsDCLSd3WsQkvH0vwM&amp;guid=ON&amp;script=0"/>
+  </div>
+</noscript>
