@@ -549,7 +549,7 @@ $modules = new Modules($registry);
 						
 						<div class="col-sm-6 hidden-xs">
 							<div id="welcome">
-								<?php if($theme_options->get( 'welcome_text', $config->get( 'config_language_id' ) ) != '') { echo html_entity_decode($theme_options->get( 'welcome_text', $config->get( 'config_language_id' ) )); } else { echo 'Call us: +795 100-666-888'; } ?>
+								<?php if($theme_options->get( 'welcome_text', $config->get( 'config_language_id' ) ) != '') { echo html_entity_decode($theme_options->get( 'welcome_text', $config->get( 'config_language_id' ) )); } ?>
 							</div>
 						</div>
 				  
