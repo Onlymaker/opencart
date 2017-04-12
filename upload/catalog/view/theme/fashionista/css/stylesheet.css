@@ -145,7 +145,7 @@ textarea {
 	margin: 0px auto;
 	max-width: 1500px;
 	background: #fff;
-	margin-top: 90px;
+	margin-top: 20px;
 }
 
 	.main-fixed .fixed {
@@ -1126,7 +1126,7 @@ textarea {
 	padding-top: 60px;
 	font-family: 'Merriweather', serif;
 }
-.footer {margin-bottom: 100px;}
+.footer {margin-bottom: 50px;}
 
 .copyright, .copyright a {
 	color: #454545;
