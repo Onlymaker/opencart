@@ -9,6 +9,18 @@ class ControllerCommonHeader extends Controller {
 			$data['base'] = HTTP_SERVER;
 		}
 
+		if (isset($this->request->get['route'])) {
+			$data['route'] = $this->request->get['route'];
+		} else {
+			$data['route'] = '';
+		}
+
+		if (isset($this->request->get['token'])) {
+			$data['token'] = $this->request->get['token'];
+		} else {
+			$data['token'] = '';
+		}
+
 		$data['description'] = $this->document->getDescription();
 		$data['keywords'] = $this->document->getKeywords();
 		$data['links'] = $this->document->getLinks();

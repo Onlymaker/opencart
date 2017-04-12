@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <title><?php echo $title; ?></title>
-<base href="<?php echo $base; ?>" />
+<?php if (strpos($route, 'extension/module/tg_fashionista') === 0) { ?><base href="<?php echo $base . 'index.php?route=' . $route . '&token=' . $token; ?>" /><? } else { ?><base href="<?php echo $base; ?>" /><?php } ?>
 <?php if ($description) { ?>
 <meta name="description" content="<?php echo $description; ?>" />
 <?php } ?>
