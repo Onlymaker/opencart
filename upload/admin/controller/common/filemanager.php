@@ -12,6 +12,14 @@ class ControllerCommonFileManager extends Controller {
 
 		if (isset($this->request->get['filter_name'])) {
 			$filter_name = rtrim(str_replace('*', '', $this->request->get['filter_name']), '/');
+			$pattern = '';
+			for ($i = 0; $i < strlen($filter_name); $i++) {
+				if (is_numeric($filter_name[$i])) {
+					$pattern .= $filter_name[$i];
+				} else {
+					$pattern .= '[' . strtoupper($filter_name[$i]) . strtolower($filter_name[$i]) . ']';
+				}
+			}
 		} else {
 			$filter_name = null;
 		}
@@ -29,27 +37,22 @@ class ControllerCommonFileManager extends Controller {
 			$page = 1;
 		}
 
-		$directories = array();
-		$files = array();
-
 		$data['images'] = array();
 
 		$this->load->model('tool/image');
 
-		if (substr(str_replace('\\', '/', realpath($directory . '/' . $filter_name)), 0, strlen(DIR_IMAGE . 'catalog')) == DIR_IMAGE . 'catalog') {
-			// Get directories
-			$directories = glob($directory . '/' . $filter_name . '*', GLOB_ONLYDIR);
+		// Get directories
+		$directories = glob($directory . '/' . (isset($pattern) ? $pattern : $filter_name) . '*', GLOB_ONLYDIR);
 
-			if (!$directories) {
-				$directories = array();
-			}
+		if (!$directories) {
+			$directories = array();
+		}
 
-			// Get files
-			$files = glob($directory . '/' . $filter_name . '*.{jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF}', GLOB_BRACE);
+		// Get files
+		$files = glob($directory . '/' . (isset($pattern) ? $pattern : $filter_name) . '*.{jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF}', GLOB_BRACE);
 
-			if (!$files) {
-				$files = array();
-			}
+		if (!$files) {
+			$files = array();
 		}
 
 		// Merge directories and files
