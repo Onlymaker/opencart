@@ -10,7 +10,7 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
   
 <?php include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_directory').'/template/themeglobal/themeglobal_bottom.tpl'); ?>
 <?php echo $footer; ?>
-<?php if (isset($webgains)) echo $webgainsUrl; ?>
+<?php if (isset($webgainsUrl)) echo $webgainsUrl; ?>
 <!-- Google Code for OM-purchurs Conversion Page -->
 <script type="text/javascript">
   /* <![CDATA[ */

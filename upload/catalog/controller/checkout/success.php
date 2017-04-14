@@ -16,19 +16,16 @@ class ControllerCheckoutSuccess extends Controller {
 			$data['total'] = isset($order['total']) ? $order['total'] : 0.00;
 			$data['currency'] = isset($order['currency_code']) ? $order['currency_code'] : 'USD';
 
-			if ($trackCode == 'webgains') {
-				$data['webgains'] = true;
-				$wgProgramID = 12723;
-				$wgPin = 2444;
-				$wgOrderValue = $data['total'];
-				$wgOrderReference = rawurlencode($order['order_id']);
-				$wgCheckString = "wgver=1.1&wgsubdomain=track&wglang=en_US&wgslang=php&wgprogramid=$wgProgramID&wgvalue=$wgOrderValue&wgorderreference=$wgOrderReference&wgmultiple=1";
-				$wgCheckSum = md5($wgPin . $wgCheckString);
-				$wgQueryString = $wgCheckString . '&wgchecksum=' . $wgCheckSum . '&wgCurrency=' . $data['currency'];
-				$wgUri = 'http://track.webgains.com/transaction.html?' . $wgQueryString;
-				$data['webgainsUrl'] = "<script src='{$wgUri}' language='JavaScript' type='text/javascript'></script>";
-				$this->log->write('Set webgains notify url ' . $data['webgainsUrl']);
-			}
+			// webgains
+			$wgProgramID = 12723;
+			$wgPin = 2444;
+			$wgOrderValue = $data['total'];
+			$wgOrderReference = rawurlencode($order['order_id']);
+			$wgCheckString = "wgver=1.1&wgsubdomain=track&wglang=en_US&wgslang=php&wgprogramid=$wgProgramID&wgvalue=$wgOrderValue&wgorderreference=$wgOrderReference&wgmultiple=1";
+			$wgCheckSum = md5($wgPin . $wgCheckString);
+			$wgQueryString = $wgCheckString . '&wgchecksum=' . $wgCheckSum . '&wgCurrency=' . $data['currency'];
+			$wgUri = 'http://track.webgains.com/transaction.html?' . $wgQueryString;
+			$data['webgainsUrl'] = "<script src='{$wgUri}' language='JavaScript' type='text/javascript'></script>";
 		}
 
 		if (isset($this->session->data['order_id'])) {
