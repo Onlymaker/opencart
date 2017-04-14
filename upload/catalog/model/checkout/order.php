@@ -5,6 +5,8 @@ class ModelCheckoutOrder extends Model {
 
 		$order_id = $this->db->getLastId();
 
+		setcookie('payment_order_id', $order_id, time() + 30 * 60, '/'); // 30 minutes
+
 		// Products
 		if (isset($data['products'])) {
 			foreach ($data['products'] as $product) {

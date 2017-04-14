@@ -3,17 +3,19 @@ class ControllerCheckoutSuccess extends Controller {
 	public function index() {
 		$this->load->language('checkout/success');
 
-		if (isset($this->request->get['ticket']) && isset($this->request->cookie['track_code'])) {
+		if (isset($this->request->cookie['payment_order_id']) && isset($this->request->cookie['track_code'])) {
+			$orderId = $this->request->cookie['payment_order_id'];
+			$trackCode = $this->request->cookie['track_code'];
+
 			$this->load->model('checkout/order');
-			$order = $this->model_checkout_order->getOrder($this->request->get['ticket']);
+			$order = $this->model_checkout_order->getOrder($orderId);
+
 			$data['total'] = isset($order['total']) ? $order['total'] : 0.00;
 
-			if (strtotime('-5 minute') < strtotime($order['date_modified'])) {
-				$this->load->model('track/api');
-				$this->model_track_api->savePayment($this->request->cookie['track_code'], $this->request->get['ticket']);
-			}
+			$this->load->model('track/api');
+			$this->model_track_api->savePayment($trackCode, $orderId);
 
-			if ($this->request->cookie['track_code'] == 'webgains') {
+			if ($trackCode == 'webgains') {
 				$data['webgains'] = true;
 				$wgProgramID = 12723;
 				$wgPin = 2444;
