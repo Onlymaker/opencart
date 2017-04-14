@@ -19,8 +19,8 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
   var google_conversion_format = "3";
   var google_conversion_color = "ffffff";
   var google_conversion_label = "aYsDCLSd3WsQkvH0vwM";
-  var google_conversion_value = <?php echo $total; ?>;
-  var google_conversion_currency = "USD";
+  var google_conversion_value = "<?php echo $total; ?>";
+  var google_conversion_currency = "<?php echo $currency; ?>";
   var google_remarketing_only = false;
   /* ]]> */
 </script>
@@ -28,6 +28,6 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
 </script>
 <noscript>
   <div style="display:inline;">
-    <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/939341970/?value=<?php echo $total; ?>&amp;currency_code=USD&amp;label=aYsDCLSd3WsQkvH0vwM&amp;guid=ON&amp;script=0"/>
+    <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/939341970/?value=<?php echo $total; ?>&amp;currency_code=<?php echo $currency; ?>&amp;label=aYsDCLSd3WsQkvH0vwM&amp;guid=ON&amp;script=0"/>
   </div>
 </noscript>
