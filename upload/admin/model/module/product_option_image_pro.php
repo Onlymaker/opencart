@@ -277,7 +277,11 @@ class ModelModuleProductOptionImagePro extends Model {
     return $image;
     
   }
-  
+
+  public function deleteProductOptionImages($product_id) {
+	$this->db->query("DELETE FROM ".DB_PREFIX."poip_option_image WHERE product_id=${product_id}");
+  }
+
   public function add_product_option_value_image($product_id, $option_value_id, $image, $sku) {
     
     $query = $this->db->query("SELECT * FROM ".DB_PREFIX."product_option_value WHERE product_id = ".(int)$product_id." AND option_value_id = ".(int)$option_value_id." ");

@@ -172,7 +172,7 @@ class ControllerModuleProductOptionImagePro extends Controller {
 			if (count($data) > 1) {
 				
 				if (isset($this->request->post['import_delete_before']) && $this->request->post['import_delete_before'] == 1) {
-					$this->model_module_product_option_image_pro->deleteAllImages();
+					//$this->model_module_product_option_image_pro->deleteAllImages();
 				}
 				
 				foreach ($data[0] as $head_key => &$head_val) {
@@ -202,13 +202,19 @@ class ControllerModuleProductOptionImagePro extends Controller {
 					
 					$images = 0;
 					$skipped = 0;
+					$products = [];
 					for ($i=1;$i<count($data);$i++) {
 						
 						$row = $data[$i];
 						
 						if (trim((string)$row[$head['image']]) != "") {
+							$product_id = (int) $row[$head['product_id']];
+							if (!in_array($product_id, $products)) {
+								$this->model_module_product_option_image_pro->deleteProductOptionImages($product_id);
+								$products[] = $product_id;
+							}
 							$sku = $head['sku'] && !empty($row[$head['sku']]) ? (string)$row[$head['sku']] : '';
-							if ($this->model_module_product_option_image_pro->add_product_option_value_image((int)$row[$head['product_id']], (int)$row[$head['option_value_id']], (string)$row[$head['image']], $sku)) {
+							if ($this->model_module_product_option_image_pro->add_product_option_value_image($product_id, (int)$row[$head['option_value_id']], (string)$row[$head['image']], $sku)) {
 								$images++;
 							} else {
 								$skipped++;
