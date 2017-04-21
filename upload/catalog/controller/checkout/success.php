@@ -13,19 +13,20 @@ class ControllerCheckoutSuccess extends Controller {
 			$this->load->model('track/api');
 			$this->model_track_api->savePayment($trackCode, $orderId);
 
-			$data['total'] = isset($order['total']) ? $order['total'] : 0.00;
-			$data['currency'] = isset($order['currency_code']) ? $order['currency_code'] : 'USD';
+			$data['total'] = $order['total'] * $order['currency_value'];
+			$data['currency'] = $order['currency_code'];
 
 			// webgains
 			$wgProgramID = 12723;
 			$wgPin = 2444;
 			$wgOrderValue = $data['total'];
-			$wgOrderReference = rawurlencode($order['order_id']);
+			$wgOrderReference = $order['order_id'];
 			$wgCheckString = "wgver=1.1&wgsubdomain=track&wglang=en_US&wgslang=php&wgprogramid=$wgProgramID&wgvalue=$wgOrderValue&wgorderreference=$wgOrderReference&wgmultiple=1";
 			$wgCheckSum = md5($wgPin . $wgCheckString);
 			$wgQueryString = $wgCheckString . '&wgchecksum=' . $wgCheckSum . '&wgCurrency=' . $data['currency'];
 			$wgUri = 'http://track.webgains.com/transaction.html?' . $wgQueryString;
 			$data['webgainsUrl'] = "<script src='{$wgUri}' language='JavaScript' type='text/javascript'></script>";
+			trace('webgains: ' . $data['webgainsUrl']);
 		}
 
 		if (isset($this->session->data['order_id'])) {
