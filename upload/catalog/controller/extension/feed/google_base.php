@@ -1,6 +1,8 @@
 <?php
 class ControllerExtensionFeedGoogleBase extends Controller {
 	public function index() {
+		@ini_set('max_execution_time', 1800);
+		@ini_set('memory_limit', '512M');
 		if ($this->config->get('google_base_status')) {
 			$output  = '<?xml version="1.0" encoding="UTF-8" ?>';
 			$output .= '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">';
