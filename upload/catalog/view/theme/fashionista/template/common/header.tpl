@@ -25,8 +25,8 @@ $modules = new Modules($registry);
 	<?php } ?>
 	
 	<!-- Google Fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Merriweather:400,300italic,300,400italic,700,700italic,900,900italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Lato:400,300italic,300,700,700italic,900,900italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Merriweather:400,300italic,300,400italic,700,700italic,900,900italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Lato:400,300italic,300,700,700italic,900,900italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 
 	<?php 
 	if( $theme_options->get( 'font_status' ) == '1' ) {

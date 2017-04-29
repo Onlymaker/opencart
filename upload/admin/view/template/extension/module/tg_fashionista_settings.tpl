@@ -665,9 +665,9 @@ function get_fonts() {
 
 ?>
 
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="view/stylesheet/css/colorpicker.css" />
-<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="view/stylesheet/template_options.css" />
 <script type="text/javascript" src="view/javascript/jquery/colorpicker.js"></script>
 <script type="text/javascript" src="http://themeglobal.com/jquery/jquery.cookie.js"></script>

@@ -24,7 +24,7 @@ class ControllerCheckoutSuccess extends Controller {
 			$wgCheckString = "wgver=1.1&wgsubdomain=track&wglang=en_US&wgslang=php&wgprogramid=$wgProgramID&wgvalue=$wgOrderValue&wgorderreference=$wgOrderReference&wgmultiple=1";
 			$wgCheckSum = md5($wgPin . $wgCheckString);
 			$wgQueryString = $wgCheckString . '&wgchecksum=' . $wgCheckSum . '&wgCurrency=' . $data['currency'];
-			$wgUri = 'http://track.webgains.com/transaction.html?' . $wgQueryString;
+			$wgUri = '//track.webgains.com/transaction.html?' . $wgQueryString;
 			$data['webgainsUrl'] = "<script src='{$wgUri}' language='JavaScript' type='text/javascript'></script>";
 			trace('webgains: ' . $data['webgainsUrl']);
 		}
