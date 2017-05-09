@@ -538,12 +538,20 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function getProductSizeArray($product_id) {
-		$size = $this->db->query("SELECT v.name as size FROM oc_product_option_value p, oc_option_description d, oc_option_value_description v WHERE p.product_id = $product_id AND d.name LIKE 'size%' AND p.option_id = d.option_id AND p.option_value_id = v.option_value_id ORDER by 1");
-		return array_column($size, 'size');
+		$size = [];
+		$query = $this->db->query("SELECT v.name as size FROM oc_product_option_value p, oc_option_description d, oc_option_value_description v WHERE p.product_id = $product_id AND d.name LIKE 'size%' AND p.option_id = d.option_id AND p.option_value_id = v.option_value_id ORDER by 1");
+		foreach ($query->rows as $result) {
+			$size[] = $result['size'];
+		}
+		return $size;
 	}
 
 	public function getProductColorArray($product_id) {
-		$color =  $this->db->query("SELECT v.name as color FROM oc_product_option_value p, oc_option_description d, oc_option_value_description v WHERE p.product_id = $product_id AND d.name = 'color' AND p.option_id = d.option_id AND p.option_value_id = v.option_value_id");
-		return array_column($color, 'color');
+		$color = [];
+		$query =  $this->db->query("SELECT v.name as color FROM oc_product_option_value p, oc_option_description d, oc_option_value_description v WHERE p.product_id = $product_id AND d.name = 'color' AND p.option_id = d.option_id AND p.option_value_id = v.option_value_id");
+		foreach ($query->rows as $result) {
+			$color[] = $result['color'];
+		}
+		return $color;
 	}
 }
