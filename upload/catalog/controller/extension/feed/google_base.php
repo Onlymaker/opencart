@@ -110,20 +110,21 @@ class ControllerExtensionFeedGoogleBase extends Controller {
 						$output .= '  <g:quantity>' . $product['quantity'] . '</g:quantity>';
 						$output .= '  <g:weight>' . $this->weight->format($product['weight'], $product['weight_class_id']) . '</g:weight>';
 						$output .= '  <g:availability><![CDATA[' . ($product['quantity'] ? 'in stock' : 'out of stock') . ']]></g:availability>';
+
+						if ($currency_code == 'USD') {
+							$output .= ' <g:tax>US:10.00:y</g:tax>';
+						}
+
+						$output .= ' <g:shipping>6.99</g:shipping>';
+
+						$sizes = $this->model_catalog_product->getProductSizeArray($product['product_id']);
+						$output .= ' <g:size>' . implode('/', $sizes) . '</g:size>';
+
+						$colors = $this->model_catalog_product->getProductColorArray($product['product_id']);
+						$output .= ' <g:color:>' . implode('/', $colors) . '</g:color>';
+
 						$output .= '</item>';
 					}
-
-					if ($currency_code == 'USD') {
-						$output .= ' <g:tax>US:10.00:y</g:tax>';
-					}
-
-					$output .= ' <g:shipping>6.99</g:shipping>';
-
-					$sizes = $this->model_catalog_product->getProductSizeArray($product['product_id']);
-					$output .= ' <g:size>' . implode('/', $sizes) . '</g:size>';
-
-					$colors = $this->model_catalog_product->getProductColorArray($product['product_id']);
-					$output .= ' <g:color:>' . implode('/', $colors) . '</g:color>';
 				}
 			}
 
