@@ -1,7 +1,7 @@
 <?php
 // Site
 $_['site_base']         = HTTP_SERVER;
-$_['site_ssl']          = HTTP_SERVER;
+$_['site_ssl']          = HTTPS_SERVER;
 
 // Language
 $_['language_default']  = 'en-gb';
