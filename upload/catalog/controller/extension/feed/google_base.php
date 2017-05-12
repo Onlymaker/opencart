@@ -121,7 +121,7 @@ class ControllerExtensionFeedGoogleBase extends Controller {
 						$output .= ' <g:size>' . implode('/', $sizes) . '</g:size>';
 
 						$colors = $this->model_catalog_product->getProductColorArray($product['product_id']);
-						$output .= ' <g:color:>' . implode('/', $colors) . '</g:color>';
+						$output .= ' <g:color>' . implode('/', $colors) . '</g:color>';
 
 						$output .= '</item>';
 					}
