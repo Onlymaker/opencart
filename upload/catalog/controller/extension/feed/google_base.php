@@ -111,11 +111,8 @@ class ControllerExtensionFeedGoogleBase extends Controller {
 						$output .= '  <g:weight>' . $this->weight->format($product['weight'], $product['weight_class_id']) . '</g:weight>';
 						$output .= '  <g:availability><![CDATA[' . ($product['quantity'] ? 'in stock' : 'out of stock') . ']]></g:availability>';
 
-						if ($currency_code == 'USD') {
-							$output .= ' <g:tax>US:10.00:y</g:tax>';
-						}
-
-						$output .= ' <g:shipping>6.99</g:shipping>';
+						$output .= ' <g:tax><g:rate>10.00</g:rate></g:tax>';
+						$output .= ' <g:shipping><g:price>6.99 USD</g:price></g:shipping>';
 
 						$sizes = $this->model_catalog_product->getProductSizeArray($product['product_id']);
 						$output .= ' <g:size>' . implode('/', $sizes) . '</g:size>';
