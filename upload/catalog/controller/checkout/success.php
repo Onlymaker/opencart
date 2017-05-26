@@ -3,30 +3,36 @@ class ControllerCheckoutSuccess extends Controller {
 	public function index() {
 		$this->load->language('checkout/success');
 
-		if (isset($this->request->cookie['payment_order_id']) && isset($this->request->cookie['track_code'])) {
+		if (isset($this->request->cookie['payment_order_id'])) {
 			$orderId = $this->request->cookie['payment_order_id'];
-			$trackCode = $this->request->cookie['track_code'];
 
 			$this->load->model('checkout/order');
 			$order = $this->model_checkout_order->getOrder($orderId);
 
-			$this->load->model('track/api');
-			$this->model_track_api->savePayment($trackCode, $orderId);
-
 			$data['total'] = $order['total'] * $order['currency_value'];
 			$data['currency'] = $order['currency_code'];
 
-			// webgains
-			$wgProgramID = 12723;
-			$wgPin = 2444;
-			$wgOrderValue = $data['total'];
-			$wgOrderReference = $order['order_id'];
-			$wgCheckString = "wgver=1.1&wgsubdomain=track&wglang=en_US&wgslang=php&wgprogramid=$wgProgramID&wgvalue=$wgOrderValue&wgorderreference=$wgOrderReference&wgmultiple=1";
-			$wgCheckSum = md5($wgPin . $wgCheckString);
-			$wgQueryString = $wgCheckString . '&wgchecksum=' . $wgCheckSum . '&wgCurrency=' . $data['currency'];
-			$wgUri = '//track.webgains.com/transaction.html?' . $wgQueryString;
-			$data['webgainsUrl'] = "<script src='{$wgUri}' language='JavaScript' type='text/javascript'></script>";
-			trace('webgains: ' . $data['webgainsUrl']);
+			if (isset($this->request->cookie['track_code'])) {
+				$trackCode = $this->request->cookie['track_code'];
+
+				$this->load->model('track/api');
+				$this->model_track_api->savePayment($trackCode, $orderId);
+
+				// webgains
+				$wgProgramID = 12723;
+				$wgPin = 2444;
+				$wgOrderValue = $data['total'];
+				$wgOrderReference = $orderId;
+				$wgCheckString = "wgver=1.1&wgsubdomain=track&wglang=en_US&wgslang=php&wgprogramid=$wgProgramID&wgvalue=$wgOrderValue&wgorderreference=$wgOrderReference&wgmultiple=1";
+				$wgCheckSum = md5($wgPin . $wgCheckString);
+				$wgQueryString = $wgCheckString . '&wgchecksum=' . $wgCheckSum . '&wgCurrency=' . $data['currency'];
+				$wgUri = '//track.webgains.com/transaction.html?' . $wgQueryString;
+				$data['webgainsUrl'] = "<script src='{$wgUri}' language='JavaScript' type='text/javascript'></script>";
+				trace('webgains: ' . $data['webgainsUrl']);
+			}
+		} else {
+			$data['total'] = 'null';
+			$data['currency'] = 'null';
 		}
 
 		if (isset($this->session->data['order_id'])) {
