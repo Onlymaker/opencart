@@ -325,17 +325,17 @@
 			url: 'index.php?route=<?php echo $type; ?>/<?php echo $name; ?>/completeOrder',
 			success: function(error) {
 				if (error.trim()) {
-					completeWithError(error.trim());
+					completeWithError('Complete order fail [' + error.trim() + ']');
 				} else {
 					location = '<?php echo $checkout_success; ?>';
 				}
 			},
 			error: function(xhr, status, error) {
-				completeWithError(xhr.responseText ? xhr.responseText : error);
+				completeWithError('Complete order error [' + xhr.responseText ? xhr.responseText : error + ']');
 			}
 		});
 	}
-	
+
 	function completeWithError(errorMessage) {
 		$.ajax({
 			type: 'POST',
