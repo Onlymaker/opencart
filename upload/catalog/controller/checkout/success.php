@@ -11,6 +11,7 @@ class ControllerCheckoutSuccess extends Controller {
 
 			$data['total'] = $order['total'] * $order['currency_value'];
 			$data['currency'] = $order['currency_code'];
+			$data['feedback'] = 1;
 
 			if (isset($this->request->cookie['track_code'])) {
 				$trackCode = $this->request->cookie['track_code'];
@@ -30,9 +31,6 @@ class ControllerCheckoutSuccess extends Controller {
 				$data['webgainsUrl'] = "<script src='{$wgUri}' language='JavaScript' type='text/javascript'></script>";
 				trace('webgains: ' . $data['webgainsUrl']);
 			}
-		} else {
-			$data['total'] = 'null';
-			$data['currency'] = 'null';
 		}
 
 		if (isset($this->session->data['order_id'])) {
