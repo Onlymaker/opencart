@@ -291,7 +291,7 @@ PHPExcel_CachedObjectStorageFactory::cache_to_sqlite3;
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 1, 'product_id');
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 1, 'option_value_id');
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 1, 'image');
-			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 1, 'sku');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 1, 'sku');
 			
 			
 			$objPHPExcel->getActiveSheet()->fromArray($data,null,'A2');
