@@ -1,2 +1,17 @@
 User-agent: *
 Disallow: /admin
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: seznambot
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
