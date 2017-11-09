@@ -72,14 +72,14 @@
 			
 				var api;
 				jQuery(document).ready(function() {
-					 api =  jQuery('.slider-<?php echo $slider['id']; ?>').revolution(
+					 api =  jQuery('.slider-<?php echo $slider["id"]; ?>').revolution(
 									{
 										delay:<?php echo $slider['settings']['slider_speed']*1000; ?>,
 										startheight:<?php echo $slider['settings']['slider_height']; ?>,
 										startwidth:<?php echo $slider['settings']['slider_width']; ?>,
 										onHoverStop:"on",						// Stop Banner Timet at Hover on Slide on/off
 			
-										thumbWidth:100,							// Thumb With and Height and Amount (only if navigation Tyope set to thumb !)
+										thumbWidth:100,							// Thumb With and Height and Amount (only if navigation Type set to thumb !)
 										thumbHeight:50,
 										thumbAmount:3,
 			

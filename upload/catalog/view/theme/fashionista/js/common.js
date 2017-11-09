@@ -12,10 +12,6 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$('#slider').on('touchstart', '.tp-caption > a', function(){
-		self.location = $(this).attr('href');
-	});
-	
 	$(".megamenu-wrapper").click(function () {
     $('a').on('click touchend', function() { 
         var link = $(this).attr('href');   
