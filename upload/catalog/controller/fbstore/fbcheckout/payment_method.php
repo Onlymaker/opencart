@@ -139,7 +139,7 @@ class ControllerFBStoreFBCheckoutPaymentMethod extends Controller {
 		if (isset($this->session->data['agree'])) {
 			$data['agree'] = $this->session->data['agree'];
 		} else {
-			$data['agree'] = '';
+			$data['agree'] = true;
 		}
 
 		$this->response->setOutput($this->model_fbstore_fbstore->getOutput('fbstore/fbcheckout/payment_method', $data));
