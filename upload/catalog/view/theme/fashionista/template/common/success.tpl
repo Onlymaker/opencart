@@ -32,7 +32,7 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
 <?php } ?>
 
 <?php if ($facebook_event == 'CompleteRegistration') { ?>
-fbq('track', 'CompleteRegistration');
+if (!!fbq) fbq('track', 'CompleteRegistration');
 <?php } ?>
 
 <?php if (isset($webgainsUrl)) echo $webgainsUrl; ?>
