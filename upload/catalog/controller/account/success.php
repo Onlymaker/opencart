@@ -49,6 +49,8 @@ class ControllerAccountSuccess extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
+        $data['facebook_event'] = 'CompleteRegistration';
+
 		$this->response->setOutput($this->load->view('common/success', $data));
 	}
 }

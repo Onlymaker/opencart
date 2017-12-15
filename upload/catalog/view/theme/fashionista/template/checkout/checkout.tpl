@@ -84,6 +84,8 @@ $(document).on('change', 'input[name=\'account\']', function() {
 	}
 });
 
+if (!!fbq) fbq('track', 'InitiateCheckout', {value: 0.00, currency: 'USD'});
+
 <?php if (!$logged) { ?>
 $(document).ready(function() {
     $.ajax({

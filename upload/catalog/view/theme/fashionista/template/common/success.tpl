@@ -21,6 +21,7 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
   var google_conversion_value = "<?php echo $total; ?>";
   var google_conversion_currency = "<?php echo $currency; ?>";
   var google_remarketing_only = false;
+  if (!!fbq) fbq('track', 'Purchase', {value: 0.00, currency: 'USD'});
 </script>
 <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
 <noscript>
@@ -28,6 +29,10 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
     <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/939341970/?value=<?php echo $total; ?>&amp;currency_code=<?php echo $currency; ?>&amp;label=aYsDCLSd3WsQkvH0vwM&amp;guid=ON&amp;script=0"/>
   </div>
 </noscript>
+<?php } ?>
+
+<?php if ($facebook_event == 'CompleteRegistration') { ?>
+fbq('track', 'CompleteRegistration');
 <?php } ?>
 
 <?php if (isset($webgainsUrl)) echo $webgainsUrl; ?>

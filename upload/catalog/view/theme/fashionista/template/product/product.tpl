@@ -632,7 +632,8 @@ $('#button-cart').on('click', function() {
 				$('#cart').load('index.php?route=common/cart/info #cart > *');
 				$('#cart #cart_content').load('index.php?route=common/cart/info #cart_content_ajax');
 				$('#cart-total').html(json['total']);
-				
+
+				if (!!fbq) fbq('track', 'AddToCart', {value: 0.00, currency: 'USD'});
 			}
 		},
         error: function(xhr, ajaxOptions, thrownError) {

@@ -257,6 +257,8 @@ var cart = {
 					
 					$('#cart').load('index.php?route=common/cart/info #cart > *');
 					$('#cart-total').html(json['total']);
+
+                    if (!!fbq) fbq('track', 'AddToCart', {value: 0.00, currency: 'USD'});
 				}
 			}
 		});
