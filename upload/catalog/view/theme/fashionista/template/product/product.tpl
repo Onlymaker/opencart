@@ -796,6 +796,7 @@ $.fn.tabs = function() {
 	
 	$(this).first().click();
 };
+if (!!fbq) fbq('track', 'ViewContent');
 </script>
 
 <script type="text/javascript"><!--
