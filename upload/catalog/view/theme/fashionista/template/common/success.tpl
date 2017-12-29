@@ -21,7 +21,7 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
   var google_conversion_value = "<?php echo $total; ?>";
   var google_conversion_currency = "<?php echo $currency; ?>";
   var google_remarketing_only = false;
-  if (!!fbq) fbq('track', 'Purchase', {value: 0.00, currency: 'USD'});
+  if (!!fbq) fbq('track', 'Purchase', {value: "<?php echo $total; ?>", currency: "<?php echo $currency; ?>"});
 </script>
 <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
 <noscript>
