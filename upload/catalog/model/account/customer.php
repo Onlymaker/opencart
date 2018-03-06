@@ -35,7 +35,9 @@ class ModelAccountCustomer extends Model {
 
 		$message .= $this->url->link('account/login', '', true) . "\n\n";
 		$message .= $this->language->get('text_services') . "\n\n";
-		$message .= "Here is $10 discount code for your first order $39+: ONLYMAKER\n\n";
+        $message .= "There are two optional discount codes for your first order:";
+        $message .= "$10 discount code for order $59+: ONLYMAKER\n\n";
+        $message .= "$5 discount code for order $39+: ONLYMAKER2\n\n";
 		$message .= $this->language->get('text_thanks') . "\n";
 		$message .= html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
 
