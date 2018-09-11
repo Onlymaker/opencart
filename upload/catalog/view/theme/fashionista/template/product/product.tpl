@@ -594,7 +594,9 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 //--></script> 
 <script type="text/javascript"><!--
 $('#button-cart').on('click', function() {
-	$.ajax({
+	if (<?php echo $product_id; ?> == 8865) {
+        location.href = "https://www.amazon.com/dp/B07GR4QH9T";
+	} else $.ajax({
 		url: 'index.php?route=checkout/cart/add',
 		type: 'post',
 		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
