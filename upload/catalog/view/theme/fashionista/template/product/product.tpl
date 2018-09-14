@@ -310,9 +310,12 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
 			          <input type="hidden" name="product_id" size="2" value="<?php echo $product_id; ?>" />
 			          &nbsp;
 						<?php if($theme_options->get( 'display_add_to_cart' ) != '0') { ?>
-							<div class="cart-holder">	
+							<div class="cart-holder">
+								<?php if ($product_id == 8865) { ?>
+								<input type="button" value="Buy at Amazon" id="button-cart" rel="<?php echo $product_id; ?>" class="button" />
+								<?php } else { ?>
 								<input type="button" value="<?php if($theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ) != '') { echo $theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ); } else { echo 'Add to cart'; } ?>" id="button-cart" rel="<?php echo $product_id; ?>" class="button" />
-								<a href="<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>" class="button" id="button-more-details"><?php if($theme_options->get( 'more_details_text', $config->get( 'config_language_id' ) ) != '') { echo html_entity_decode($theme_options->get( 'more_details_text', $config->get( 'config_language_id' ) )); } else { echo 'More details'; } ?></a>
+								<?php } ?>
 							</div>
 						<?php } ?>
 						
