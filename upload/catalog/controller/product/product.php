@@ -474,6 +474,8 @@ class ControllerProductProduct extends Controller {
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
+			$amazon = '/var/www/html/image/catalog/onlymaker/amazon.txt';
+			if (is_file($amazon)) $data['amazon'] = parse_ini_file($amazon);
 
 			$this->response->setOutput($this->load->view('product/product', $data));
 		} else {

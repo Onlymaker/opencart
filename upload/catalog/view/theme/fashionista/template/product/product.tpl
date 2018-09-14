@@ -311,7 +311,7 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
 			          &nbsp;
 						<?php if($theme_options->get( 'display_add_to_cart' ) != '0') { ?>
 							<div class="cart-holder">
-								<?php if ($product_id == 8865) { ?>
+								<?php if (array_key_exists($product_id, $amazon)) { ?>
 								<input type="button" value="Buy at Amazon" id="button-cart" rel="<?php echo $product_id; ?>" class="button" />
 								<?php } else { ?>
 								<input type="button" value="<?php if($theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ) != '') { echo $theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ); } else { echo 'Add to cart'; } ?>" id="button-cart" rel="<?php echo $product_id; ?>" class="button" />
@@ -597,8 +597,8 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 //--></script> 
 <script type="text/javascript"><!--
 $('#button-cart').on('click', function() {
-	if (<?php echo $product_id; ?> == 8865) {
-        location.href = "https://www.amazon.com/dp/B07GR4QH9T";
+	if (<?php echo (array_key_exists($product_id, $amazon)); ?>) {
+        location.href = "<?php echo $amazon[$product_id]; ?>";
 	} else $.ajax({
 		url: 'index.php?route=checkout/cart/add',
 		type: 'post',
