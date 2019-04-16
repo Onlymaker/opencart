@@ -312,10 +312,9 @@ include('catalog/view/theme/'.$config->get($config->get('config_theme') . '_dire
 						<?php if($theme_options->get( 'display_add_to_cart' ) != '0') { ?>
 							<div class="cart-holder">
 								<?php if (array_key_exists($product_id, $amazon)) { ?>
-								<input type="button" value="Buy at Amazon" id="button-cart" rel="<?php echo $product_id; ?>" class="button" />
-								<?php } else { ?>
-								<input type="button" value="<?php if($theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ) != '') { echo $theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ); } else { echo 'Add to cart'; } ?>" id="button-cart" rel="<?php echo $product_id; ?>" class="button" />
+								<input type="button" value="Buy at Amazon" id="button-cart-amazon" rel="<?php echo $product_id; ?>" class="button" />
 								<?php } ?>
+								<input type="button" value="<?php if($theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ) != '') { echo $theme_options->get( 'add_to_cart_text', $config->get( 'config_language_id' ) ); } else { echo 'Add to cart'; } ?>" id="button-cart" rel="<?php echo $product_id; ?>" class="button" />
 							</div>
 						<?php } ?>
 						
@@ -596,10 +595,13 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 });
 //--></script> 
 <script type="text/javascript"><!--
+if (<?php echo (array_key_exists($product_id, $amazon) + 0); ?>) {
+	$('#button-cart-amazon').on('click', function() {
+		location.href = "<?php echo $amazon[$product_id]; ?>";
+	});
+}
 $('#button-cart').on('click', function() {
-    if (<?php echo (array_key_exists($product_id, $amazon) + 0); ?>) {
-        location.href = "<?php echo $amazon[$product_id]; ?>";
-	} else $.ajax({
+	$.ajax({
 		url: 'index.php?route=checkout/cart/add',
 		type: 'post',
 		data: $('#product input[type=\'text\'], #product input[type=\'hidden\'], #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product select, #product textarea'),
